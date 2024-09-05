@@ -27,14 +27,14 @@ export const FooterCom = () => {
                   target="_parent"
                   rel="noopener noreferrer"
                 >
-                  Suryakanta Projects
+                  Projects
                 </Footer.Link>
                 <Footer.Link
                   href="#"
                   target="_parent"
                   rel="noopener noreferrer"
                 >
-                  Suryakanta's Blog
+                  Blog
                 </Footer.Link>
               </Footer.LinkGroup>
             </div>
