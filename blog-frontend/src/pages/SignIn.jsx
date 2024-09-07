@@ -99,7 +99,7 @@ export default function SignIn() {
                   <span className="pl-3">Loading..</span>
                 </>
               ) : (
-                "SignIn"
+                "Signin"
               )}
             </Button>
             <OAuth />
