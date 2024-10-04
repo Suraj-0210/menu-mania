@@ -5,12 +5,13 @@ function Home() {
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <div>
-      <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold lg:text-6">Welcome to MenuMania</h1>
+    <div className="flex flex-col-reverse md:flex-row gap-6 p-28 px-3 max-w-6xl mx-auto">
+      {/* Left section (Text content) */}
+      <div className="flex-1 flex flex-col gap-6">
+        <h1 className="text-3xl font-bold lg:text-6xl">Welcome to MenuMania</h1>
         <p className="text-gray-500 text-xs sm:text-sm">
           MenuMania is your ultimate solution to streamline your restaurant’s
-          menu management and enhance your customers&apos; dining experience.
+          menu management and enhance your customers' dining experience.
         </p>
         {currentUser ? (
           <Link
@@ -30,6 +31,15 @@ function Home() {
             </Link>
           </>
         )}
+      </div>
+
+      {/* Right section (Image) */}
+      <div className="flex-1">
+        <img
+          src="https://cdn.pixabay.com/photo/2017/01/26/02/06/platter-2009590_1280.jpg" // Replace with the actual image path
+          alt="Welcome to MenuMania"
+          className="w-full h-auto object-cover"
+        />
       </div>
     </div>
   );

@@ -5,17 +5,28 @@ import { FaHome } from "react-icons/fa";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { QRCodeCanvas } from "qrcode.react"; // Importing QR Code component
+import { useRef } from "react";
 
 export const RestaurantSidebar = (props) => {
   const currentRestaurant = props.restaurant;
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const qrCodeRef = useRef(null);
 
-  const dispatch = useDispatch();
+  const downloadQRCode = () => {
+    const canvas = qrCodeRef.current.querySelector("canvas");
+    const url = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${currentRestaurant.restaurantname}-qrcode.png`;
+    a.click();
+  };
 
   const handleDeleteRestaurant = async () => {
     setShowModal(false);
     try {
-      dispatch(deleteStart());
       const res = await fetch(
         `/api/restaurant/delete/${currentRestaurant._id}`,
         {
@@ -23,13 +34,11 @@ export const RestaurantSidebar = (props) => {
         }
       );
       const data = await res.json();
-      if (!res.ok) {
-        dispatch(deleteFailed(data.message));
-      } else {
-        dispatch(deleteSuccess(data));
+      if (res.ok) {
+        navigate(0);
       }
     } catch (error) {
-      dispatch(deleteFailed(error.message));
+      console.log(error);
     }
   };
 
@@ -45,6 +54,7 @@ export const RestaurantSidebar = (props) => {
                 className="w-20 h-20"
               />
             </Sidebar.Logo>
+            <Sidebar.Item>Id {currentRestaurant._id}</Sidebar.Item>
             <Sidebar.Item icon={IoRestaurant}>
               {currentRestaurant.restaurantname}
             </Sidebar.Item>
@@ -53,11 +63,27 @@ export const RestaurantSidebar = (props) => {
                 {currentRestaurant.address}
               </Sidebar.Item>
             </span>
+            <div className="mt-4 ml-7" ref={qrCodeRef}>
+              <QRCodeCanvas
+                value={`https://menumania-end-user.netlify.app/`} // The URL you want to encode
+                size={128} // Adjust size as needed
+                bgColor={"#ffffff"}
+                fgColor={"#000000"}
+                includeMargin={true}
+              />
+              {/* Clickable QR Code to download */}
+              <span
+                className="text-blue-500 cursor-pointer mt-2"
+                onClick={downloadQRCode}
+              >
+                Download QR Code
+              </span>
+            </div>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
-        <div className="text-red-500 flex justify-between mt-5">
+        <div className="text-red-500 flex justify-between mt-20 ">
           <span className="cursor-pointer" onClick={() => setShowModal(true)}>
-            Delete Account
+            Delete Restaurant
           </span>
           <span className="cursor-pointer">Update</span>
         </div>

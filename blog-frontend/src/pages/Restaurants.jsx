@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
 import { RestaurantSidebar } from "../components/RestaurantSidebar";
+import { RestaurantMenus } from "./RestaurantMenus";
 
 export default function Restaurants() {
   const { currentUser } = useSelector((state) => state.user);
@@ -86,8 +87,8 @@ export default function Restaurants() {
         return setErrorMessage(data.message);
       }
       if (res.ok) {
-        navigate("/restaurants");
         setCreateRestaurantSuccess("Restaurant Created Successfully !! ");
+        navigate(0);
       }
     } catch (error) {
       return setErrorMessage(error.message);
@@ -142,7 +143,7 @@ export default function Restaurants() {
   return (
     <div className="min-h-screen mt-20">
       {restaurants.length ? (
-        <RestaurantSidebar restaurant={restaurants[0]} />
+        <RestaurantMenus restaurant={restaurants[0]} />
       ) : (
         <>
           <div className="flex mx-auto max-w-3xl flex-col md:flex-row md:items-center gap-5">
