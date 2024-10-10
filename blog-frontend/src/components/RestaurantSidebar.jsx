@@ -8,6 +8,8 @@ import { QRCodeCanvas } from "qrcode.react"; // Importing QR Code component
 
 export const RestaurantSidebar = (props) => {
   const currentRestaurant = { ...props.restaurant };
+  const handleClickUpdateRestaurant = props.handleClickUpdateRestaurant;
+  const isUpdateRestaurant = props.isUpdateRestaurant;
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const qrCodeRef = useRef(null);
@@ -119,7 +121,12 @@ export const RestaurantSidebar = (props) => {
           >
             Delete Restaurant
           </span>
-          <span className="cursor-pointer hover:underline">Update</span>
+          <span
+            className="cursor-pointer hover:underline text-green-500"
+            onClick={handleClickUpdateRestaurant}
+          >
+            {isUpdateRestaurant ? "Cancel" : "Update"}
+          </span>
         </div>
       </Sidebar>
 

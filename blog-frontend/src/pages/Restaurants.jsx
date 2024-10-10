@@ -17,7 +17,7 @@ export default function Restaurants() {
 
   const fetchRestaurants = async () => {
     try {
-      const res = await fetch(`/api/restaurant/${currentUser._id}`, {
+      const res = await fetch(`/api/restaurant/all/${currentUser._id}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

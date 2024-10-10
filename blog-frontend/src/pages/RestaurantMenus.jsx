@@ -11,9 +11,13 @@ import {
 import { app } from "../firebase";
 import { MenuCards } from "../components/MenuCards";
 import { AddDish } from "../components/AddDish";
+import AddRestaurant from "../components/AddRestaurant";
+import UpdateRestaurant from "../components/UpdateRestaurant";
+import { useSelector } from "react-redux";
 
 export const RestaurantMenus = (props) => {
   const restaurant = props.restaurant;
+  const { currentUser } = useSelector((state) => state.user);
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
@@ -21,9 +25,10 @@ export const RestaurantMenus = (props) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUpdateRestaurant, setIsUpdateRestaurant] = useState(false);
   const [createRestaurantSuccess, setCreateRestaurantSuccess] = useState("");
+  const [updateRestaurantSuccess, setUpdateRestaurantSuccess] = useState("");
   const [isAddNew, setIsAddNew] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,6 +103,9 @@ export const RestaurantMenus = (props) => {
   const handleClickAddNew = () => {
     setIsAddNew((prevState) => !prevState);
   };
+  const handleClickUpdateRestaurant = () => {
+    setIsUpdateRestaurant((prevState) => !prevState);
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -141,7 +149,11 @@ export const RestaurantMenus = (props) => {
   return (
     <div className="flex flex-col md:flex-row justify-between gap-6">
       <div className="h-full mb-10">
-        <RestaurantSidebar restaurant={restaurant} />
+        <RestaurantSidebar
+          restaurant={restaurant}
+          handleClickUpdateRestaurant={handleClickUpdateRestaurant}
+          isUpdateRestaurant={isUpdateRestaurant}
+        />
       </div>
 
       <div className="flex-1 justify-center mx-4 my-4">
@@ -149,6 +161,16 @@ export const RestaurantMenus = (props) => {
           <div className="flex justify-center items-center h-64">
             <Spinner size="lg" className="text-indigo-600" />
           </div>
+        ) : isUpdateRestaurant ? (
+          <UpdateRestaurant
+            currentUser={currentUser}
+            restaurantId={restaurant._id} // Pass restaurantId as a prop
+            setUpdateRestaurantSuccess={setUpdateRestaurantSuccess} // Set success message
+            setErrorMessage={setErrorMessage}
+            navigate={navigate}
+            updateRestaurantSuccess={updateRestaurantSuccess}
+            errorMessage={errorMessage}
+          />
         ) : !isAddNew && menu.length ? (
           <MenuCards
             menu={menu}
