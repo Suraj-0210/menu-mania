@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Alert,
   Button,
@@ -12,6 +11,7 @@ import {
 export const AddDish = ({
   menu,
   handleSubmit,
+  handleClickAddNew,
   onChangeHandler,
   handleImageChange,
   uploadProgress,
@@ -85,6 +85,12 @@ export const AddDish = ({
             "Submit"
           )}
         </Button>
+
+        {menu?.length ? (
+          <Button onClick={handleClickAddNew}>Cancle</Button>
+        ) : (
+          ""
+        )}
       </form>
 
       {createRestaurantSuccess && (

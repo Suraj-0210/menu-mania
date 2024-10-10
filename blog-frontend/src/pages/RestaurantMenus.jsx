@@ -185,6 +185,7 @@ export const RestaurantMenus = (props) => {
             handleImageChange={handleImageChange}
             uploadProgress={uploadProgress}
             formLoading={formLoading}
+            handleClickAddNew={handleClickAddNew}
             createRestaurantSuccess={createRestaurantSuccess}
             errorMessage={errorMessage}
           />
