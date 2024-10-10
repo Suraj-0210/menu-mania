@@ -20,39 +20,45 @@ export const AddDish = ({
   errorMessage,
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="mb-5 text-lg text-gray-700 dark:text-gray-400">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+      <h2 className="mb-5 text-lg text-gray-700 dark:text-gray-300">
         Take the next step, add your {menu.length ? "next" : "first"} dish!
       </h2>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div>
-          <Label value="Dish Name" />
+          <Label
+            className="text-gray-700 dark:text-gray-300"
+            value="Dish Name"
+          />
           <TextInput
             type="text"
             placeholder="Pancakes"
             id="name"
             onChange={onChangeHandler}
-            className="rounded-md"
+            className="rounded-md dark:bg-gray-700 dark:text-gray-200"
           />
         </div>
         <div>
-          <Label value="Description" />
+          <Label
+            className="text-gray-700 dark:text-gray-300"
+            value="Description"
+          />
           <TextInput
             type="text"
             placeholder="Brief description of the dish"
             id="description"
             onChange={onChangeHandler}
-            className="rounded-md"
+            className="rounded-md dark:bg-gray-700 dark:text-gray-200"
           />
         </div>
         <div>
-          <Label value="Price" />
+          <Label className="text-gray-700 dark:text-gray-300" value="Price" />
           <TextInput
             type="text"
             placeholder="₹ 80"
             id="price"
             onChange={onChangeHandler}
-            className="rounded-md"
+            className="rounded-md dark:bg-gray-700 dark:text-gray-200"
           />
         </div>
         <div>
@@ -61,6 +67,7 @@ export const AddDish = ({
             accept="image/*"
             helperText="Upload an image"
             onChange={handleImageChange}
+            className="dark:text-gray-200"
           />
         </div>
         {uploadProgress > 0 && (
@@ -68,7 +75,7 @@ export const AddDish = ({
             progress={uploadProgress}
             color="purple"
             label={`${uploadProgress}%`}
-            className="mt-2 rounded-full"
+            className="mt-2 rounded-full dark:bg-gray-600 dark:text-gray-100"
           />
         )}
         <Button
@@ -87,19 +94,31 @@ export const AddDish = ({
         </Button>
 
         {menu?.length ? (
-          <Button onClick={handleClickAddNew}>Cancle</Button>
+          <Button
+            onClick={handleClickAddNew}
+            color="gray"
+            className="dark:bg-gray-700"
+          >
+            Cancel
+          </Button>
         ) : (
           ""
         )}
       </form>
 
       {createRestaurantSuccess && (
-        <Alert color="success" className="mt-5">
+        <Alert
+          color="success"
+          className="mt-5 dark:bg-green-600 dark:text-gray-100"
+        >
           {createRestaurantSuccess}
         </Alert>
       )}
       {errorMessage && (
-        <Alert className="mt-5" color="failure">
+        <Alert
+          className="mt-5 dark:bg-red-600 dark:text-gray-100"
+          color="failure"
+        >
           {errorMessage}
         </Alert>
       )}

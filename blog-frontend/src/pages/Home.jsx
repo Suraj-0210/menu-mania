@@ -29,26 +29,29 @@ function Home() {
     <div className="flex flex-col-reverse md:flex-row gap-6 p-8 sm:p-12 md:p-16 lg:p-28 px-3 max-w-6xl mx-auto h-[calc(100vh-60px)]">
       {/* Left section (Text content) */}
       <div className="flex-1 flex flex-col justify-center gap-6 animate-fade-in">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 animate-slide-up">
-          Welcome to <span className="text-teal-500">MenuMania</span>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 animate-slide-up">
+          Welcome to{" "}
+          <span className="text-teal-500 dark:text-teal-400">MenuMania</span>
         </h1>
-        <p className="text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
           MenuMania is your ultimate solution to streamline your restaurant’s
           menu management and enhance your customers&apos; dining experience.
         </p>
         {currentUser ? (
           <Link
             to="/restaurants"
-            className="text-sm sm:text-base lg:text-lg text-teal-500 font-bold hover:underline transition-transform transform hover:scale-105 duration-200 ease-in-out animate-bounce-in"
+            className="text-sm sm:text-base lg:text-lg text-teal-500 dark:text-teal-400 font-bold hover:underline transition-transform transform hover:scale-105 duration-200 ease-in-out animate-bounce-in"
           >
             View all Restaurants
           </Link>
         ) : (
           <>
-            <p className="animate-fade-in-delayed">Ready to get started?</p>
+            <p className="text-gray-600 dark:text-gray-300 animate-fade-in-delayed">
+              Ready to get started?
+            </p>
             <Link
               to="/signin"
-              className="text-sm sm:text-base lg:text-lg text-teal-500 font-bold hover:underline transition-transform transform hover:scale-105 duration-200 ease-in-out animate-bounce-in"
+              className="text-sm sm:text-base lg:text-lg text-teal-500 dark:text-teal-400 font-bold hover:underline transition-transform transform hover:scale-105 duration-200 ease-in-out animate-bounce-in"
             >
               Start your first step by logging in now!
             </Link>

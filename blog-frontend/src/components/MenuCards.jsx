@@ -27,7 +27,7 @@ export const MenuCards = (props) => {
         {menu.map((dish, index) => (
           <Card
             key={index}
-            className="max-w-[300px] max-h-[400px] shadow-xl transition-transform transform hover:scale-105 rounded-lg overflow-hidden bg-white border border-gray-200 hover:shadow-2xl"
+            className="max-w-[300px] max-h-[400px] shadow-xl transition-transform transform hover:scale-105 rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-2xl"
           >
             <div className="h-48 w-full overflow-hidden rounded-t-lg">
               <img
@@ -37,16 +37,18 @@ export const MenuCards = (props) => {
               />
             </div>
             <div className="p-4">
-              <h5 className="text-xl font-semibold text-gray-800 hover:text-teal-600 transition-colors duration-200">
+              <h5 className="text-xl font-semibold text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200">
                 {dish.name}
               </h5>
-              <p className="text-gray-600 mt-2">{dish.description}</p>
-              <p className="text-lg font-bold mt-2 text-indigo-600">
+              <p className="text-gray-600 dark:text-gray-400 mt-2">
+                {dish.description}
+              </p>
+              <p className="text-lg font-bold mt-2 text-indigo-600 dark:text-indigo-400">
                 ₹{dish.price}
               </p>
             </div>
             <div
-              className="text-red-600 flex justify-end cursor-pointer p-2 transition-colors duration-200 hover:text-red-800"
+              className="text-red-600 dark:text-red-400 flex justify-end cursor-pointer p-2 transition-colors duration-200 hover:text-red-800 dark:hover:text-red-600"
               onClick={(e) => deleteDish(e, dish.name)}
             >
               <span className="font-semibold">Delete</span>
@@ -56,7 +58,7 @@ export const MenuCards = (props) => {
 
         {/* Add another dish button */}
         <Card
-          className="max-w-xs cursor-pointer hover:shadow-2xl transition-shadow duration-300 hover:scale-105 bg-gradient-to-r from-teal-300 to-teal-500 text-white"
+          className="max-w-xs cursor-pointer hover:shadow-2xl transition-shadow duration-300 hover:scale-105 bg-gradient-to-r from-teal-300 to-teal-500 dark:from-teal-600 dark:to-teal-800 text-white"
           onClick={handleClickAddNew}
         >
           <div className="p-4 flex flex-col items-center">
