@@ -80,7 +80,13 @@ export const updateRestaurant = async (req, res, next) => {
     console.log(updateRestaurant._doc);
     res.status(200).json(updatedRestaurant._doc);
   } catch (error) {
-    next(errorHandler(500, "Restaurant not Found"));
+    console.log(error);
+    next(
+      errorHandler(
+        500,
+        "" + error.codeName + " " + error.keyValue.restaurantname
+      )
+    );
   }
 };
 

@@ -32,11 +32,11 @@ export default function Restaurants() {
   };
 
   return (
-    <div className="h-screen mt-20">
+    <div className="min-h-screen mt-20">
       {restaurants.length ? (
         <RestaurantMenus restaurant={restaurants[0]} />
       ) : (
-        <div className="flex flex-col justify-center items-center mx-auto max-w-4xl py-10 px-6 bg-white shadow-lg rounded-lg md:flex-row gap-8 md:items-center transition-transform transform hover:scale-105 dark:bg-gray-800 dark:shadow-md">
+        <div className="flex flex-col justify-center items-center mx-auto max-w-4xl py-10 px-6 bg-white shadow-lg rounded-lg gap-8 md:flex-row md:items-center transition-transform transform hover:scale-105 dark:bg-gray-800 dark:shadow-md">
           {/* Left Section - Intro */}
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-gray-900 mb-2 dark:text-gray-100">
@@ -52,7 +52,7 @@ export default function Restaurants() {
           </div>
 
           {/* Right Section - Add Restaurant Form */}
-          <div className="flex-1 max-w-lg">
+          <div className="flex-1 w-full md:max-w-lg">
             <AddRestaurant
               currentUser={currentUser}
               setCreateRestaurantSuccess={setCreateRestaurantSuccess}
@@ -62,19 +62,6 @@ export default function Restaurants() {
               createRestaurantSuccess={createRestaurantSuccess}
             />
           </div>
-        </div>
-      )}
-
-      {/* Success and Error Message Display */}
-      {createRestaurantSuccess && (
-        <div className="mt-5 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative dark:bg-green-900 dark:border-green-700 dark:text-green-300">
-          {createRestaurantSuccess}
-        </div>
-      )}
-
-      {errorMessage && (
-        <div className="mt-5 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900 dark:border-red-700 dark:text-red-300">
-          {errorMessage}
         </div>
       )}
     </div>
