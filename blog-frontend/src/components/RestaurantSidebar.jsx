@@ -95,7 +95,10 @@ export const RestaurantSidebar = (props) => {
             </div>
 
             {/* QR Code Section */}
-            <div className="mt-4 ml-7" ref={qrCodeRef}>
+            <div
+              className="mt-4 flex justify-center items-center flex-col"
+              ref={qrCodeRef}
+            >
               <QRCodeCanvas
                 value={`https://menumania-end-user.netlify.app/${currentRestaurant._id}?table=${selectedTable}`} // The URL you want to encode
                 size={128} // Adjust size as needed
