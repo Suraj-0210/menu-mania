@@ -32,7 +32,7 @@ export default function Restaurants() {
   };
 
   return (
-    <div className="min-h-screen mt-20">
+    <div className="h-[calc(100vh-60px)] mt-20">
       {restaurants.length ? (
         <RestaurantMenus restaurant={restaurants[0]} />
       ) : (

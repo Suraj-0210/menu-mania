@@ -26,7 +26,7 @@ function Home() {
   }, [images.length]);
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-6 p-8 sm:p-12 md:p-16 lg:p-28 px-3 max-w-6xl mx-auto min-h-screen">
+    <div className="flex flex-col-reverse md:flex-row gap-6 p-8 sm:p-12 md:p-16 lg:p-28 px-3 max-w-6xl mx-auto h-[calc(100vh-60px)]">
       {/* Left section (Text content) */}
       <div className="flex-1 flex flex-col justify-center gap-6 animate-fade-in">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 animate-slide-up">
