@@ -3,7 +3,7 @@ import { IoAddCircleSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 export const MenuCards = (props) => {
-  const { menu, isAddNew, handleClickAddNew } = props;
+  const { menu, handleClickAddNew } = props;
   const navigate = useNavigate();
 
   const deleteDish = async (e, dishname) => {
@@ -27,17 +27,17 @@ export const MenuCards = (props) => {
         {menu.map((dish, index) => (
           <Card
             key={index}
-            className="max-w-[300px] max-h-[400px] shadow-lg transition-transform transform hover:scale-105 rounded-lg overflow-hidden"
+            className="max-w-[300px] max-h-[400px] shadow-xl transition-transform transform hover:scale-105 rounded-lg overflow-hidden bg-white border border-gray-200 hover:shadow-2xl"
           >
             <div className="h-48 w-full overflow-hidden rounded-t-lg">
               <img
                 src={dish.image}
                 alt={dish.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
               />
             </div>
             <div className="p-4">
-              <h5 className="text-xl font-semibold text-gray-800">
+              <h5 className="text-xl font-semibold text-gray-800 hover:text-teal-600 transition-colors duration-200">
                 {dish.name}
               </h5>
               <p className="text-gray-600 mt-2">{dish.description}</p>
@@ -46,22 +46,22 @@ export const MenuCards = (props) => {
               </p>
             </div>
             <div
-              className="text-red-500 flex justify-end cursor-pointer p-2"
+              className="text-red-600 flex justify-end cursor-pointer p-2 transition-colors duration-200 hover:text-red-800"
               onClick={(e) => deleteDish(e, dish.name)}
             >
-              <span>Delete</span>
+              <span className="font-semibold">Delete</span>
             </div>
           </Card>
         ))}
 
         {/* Add another dish button */}
         <Card
-          className="max-w-xs cursor-pointer hover:shadow-lg transition-shadow duration-300 hover:scale-105 bg-gradient-to-r from-blue-200 to-blue-400 text-white"
-          onClick={handleClickAddNew} // Use the prop here
+          className="max-w-xs cursor-pointer hover:shadow-2xl transition-shadow duration-300 hover:scale-105 bg-gradient-to-r from-teal-300 to-teal-500 text-white"
+          onClick={handleClickAddNew}
         >
           <div className="p-4 flex flex-col items-center">
-            <h5 className="text-xl font-semibold mb-4">Add Another Dish</h5>
-            <IoAddCircleSharp className="text-4xl" />
+            <h5 className="text-xl font-semibold mb-2">Add Another Dish</h5>
+            <IoAddCircleSharp className="text-4xl animate-bounce" />
           </div>
         </Card>
       </div>
