@@ -23,8 +23,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export default function DashProfile() {
-  const { currentUser, error } = useSelector((state) => state.user);
+export default function DashProfile(props) {
+  const { currentUser } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -36,6 +36,7 @@ export default function DashProfile() {
   const [formData, setFormData] = useState({});
   const filePickerRef = useRef();
   const dispatch = useDispatch();
+  const currentRestaurant = props.restaurant;
 
   const navigate = useNavigate();
   const handleImageChange = (e) => {
@@ -131,11 +132,21 @@ export default function DashProfile() {
       const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
       });
+      const resDeleteRestaurant = await fetch(
+        `/api/restaurant/delete/${currentRestaurant._id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
+      console.log(res.ok);
       if (!res.ok) {
+        console.log("delete Not ok");
         dispatch(deleteFailed(data.message));
       } else {
+        console.log("deleted");
         dispatch(deleteSuccess(data));
+        navigate("/");
       }
     } catch (error) {
       dispatch(deleteFailed(error.message));
@@ -197,6 +208,7 @@ export default function DashProfile() {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="user"
+            crossOrigin="anonymous"
             className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
               imageFileUploadProgress &&
               imageFileUploadProgress < 100 &&
@@ -247,11 +259,6 @@ export default function DashProfile() {
       {updateUserError && (
         <Alert color="failure" className="mt-5">
           {updateUserError}
-        </Alert>
-      )}
-      {error && (
-        <Alert color="failure" className="mt-5">
-          {error}
         </Alert>
       )}
       <Modal

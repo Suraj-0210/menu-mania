@@ -44,7 +44,7 @@ export const createRecepie = async (req, res, next) => {
 
 export const deleteRecepie = async (req, res, next) => {
   try {
-    await Restaurant.findByIdAndDelete(req.params.menuid);
+    await Menu.findOneAndDelete({ name: req.params.recepiename });
     res.status(200).json("Recepie has been deleted");
   } catch (error) {
     next(error);
@@ -58,4 +58,29 @@ export const fetchRecepie = async (req, res, next) => {
     const menu = await Menu.find({ restaurantid: restaurantId });
     res.send(menu);
   } catch (error) {}
+};
+
+export const deleteAllRecepie = async (req, res, next) => {
+  console.log("Delete All Menus called");
+  const restaurantId = req.params.restaurantid;
+
+  try {
+    // Delete all menus where the restaurantid matches
+    const result = await Menu.deleteMany({ restaurantid: restaurantId });
+
+    if (result.deletedCount > 0) {
+      res.status(200).json({
+        message: `Successfully deleted ${result.deletedCount} menu(s) for restaurant ID ${restaurantId}`,
+      });
+    } else {
+      res.status(404).json({
+        message: `No menus found for restaurant ID ${restaurantId}`,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while deleting the menus",
+      error: error.message,
+    });
+  }
 };

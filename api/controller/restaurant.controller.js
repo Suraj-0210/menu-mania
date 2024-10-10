@@ -6,17 +6,20 @@ export const test = (req, res) => {
 };
 
 export const createRestaurant = async (req, res, next) => {
-  const { user_id, restaurantname, address, logo } = req.body;
+  const { user_id, restaurantname, address, logo, tables } = req.body;
+  console.log("tables:" + typeof Number(tables));
 
   if (
     !user_id ||
     !restaurantname ||
     !address ||
     !logo ||
+    !tables ||
     user_id === "" ||
     restaurantname === "" ||
     address === "" ||
-    logo === ""
+    logo === "" ||
+    tables === ""
   ) {
     next(errorHandler(400, "All fields are required!!"));
   }
@@ -26,6 +29,7 @@ export const createRestaurant = async (req, res, next) => {
     restaurantname,
     address,
     logo,
+    tables: Number(tables),
   });
 
   try {

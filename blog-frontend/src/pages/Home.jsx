@@ -5,13 +5,13 @@ function Home() {
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-6 p-28 px-3 max-w-6xl mx-auto">
+    <div className="flex flex-col-reverse md:flex-row gap-6 p-28 px-3 max-w-6xl mx-auto h-screen">
       {/* Left section (Text content) */}
       <div className="flex-1 flex flex-col gap-6">
         <h1 className="text-3xl font-bold lg:text-6xl">Welcome to MenuMania</h1>
         <p className="text-gray-500 text-xs sm:text-sm">
           MenuMania is your ultimate solution to streamline your restaurant’s
-          menu management and enhance your customers' dining experience.
+          menu management and enhance your customers&apos; dining experience.
         </p>
         {currentUser ? (
           <Link

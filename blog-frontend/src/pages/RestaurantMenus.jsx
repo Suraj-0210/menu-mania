@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import { RestaurantSidebar } from "../components/RestaurantSidebar";
-import {
-  Alert,
-  Button,
-  Card,
-  FileInput,
-  Label,
-  Progress,
-  Spinner,
-  TextInput,
-} from "flowbite-react";
+import { Spinner } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
@@ -18,16 +9,17 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
-import { IoAddCircleSharp } from "react-icons/io5";
+import { MenuCards } from "../components/MenuCards";
+import { AddDish } from "../components/AddDish";
 
 export const RestaurantMenus = (props) => {
   const restaurant = props.restaurant;
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
-  const [imageFileUrl, setImageFileUrl] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [createRestaurantSuccess, setCreateRestaurantSuccess] = useState("");
   const [isAddNew, setIsAddNew] = useState(false);
@@ -39,6 +31,7 @@ export const RestaurantMenus = (props) => {
   }, []);
 
   const fetchMenus = async () => {
+    setLoading(true);
     try {
       const res = await fetch(`/api/menu/${restaurant._id}`, {
         method: "GET",
@@ -51,6 +44,8 @@ export const RestaurantMenus = (props) => {
       setMenu(data);
     } catch (error) {
       console.error("Error fetching restaurants:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,11 +59,8 @@ export const RestaurantMenus = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setErrorMessage(null);
     setCreateRestaurantSuccess(null);
-
-    console.log(formData);
 
     if (
       !formData.name ||
@@ -80,8 +72,7 @@ export const RestaurantMenus = (props) => {
     }
 
     try {
-      setLoading(true);
-      setErrorMessage(null);
+      setFormLoading(true);
       const res = await fetch("/api/menu/createRecepie", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,31 +81,28 @@ export const RestaurantMenus = (props) => {
 
       const data = await res.json();
       if (data.success === false) {
-        setLoading(false);
+        setFormLoading(false);
         return setErrorMessage(data.message);
       }
-      setLoading(false);
+      setFormLoading(false);
       if (res.ok) {
         navigate(0);
         handleClickAddNew();
       }
     } catch (error) {
       setErrorMessage(error.message);
-      setLoading(false);
+      setFormLoading(false);
     }
   };
 
   const handleClickAddNew = () => {
-    console.log("add New");
-    setIsAddNew((prevState) => !prevState); // Toggle between true/false
-    console.log("IsAddNew" + isAddNew);
+    setIsAddNew((prevState) => !prevState);
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      setImageFileUrl(URL.createObjectURL(file)); // Optional preview before upload
     }
   };
 
@@ -136,136 +124,48 @@ export const RestaurantMenus = (props) => {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        setUploadProgress(progress); // Update progress
+        setUploadProgress(progress);
       },
       (error) => {
         console.error("Error uploading image:", error);
         setErrorMessage("Error uploading image");
-        setImageFile(null);
-        setImageFileUrl(null);
       },
       () => {
-        // Get download URL after the upload completes
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("Image uploaded successfully, URL:", downloadURL);
-          setImageFileUrl(downloadURL);
           setFormData((prev) => ({ ...prev, image: downloadURL }));
         });
       }
     );
   };
 
-  console.log(formData);
-  console.log(menu);
-
   return (
-    <div className="flex flex-col md:flex-row justify-between gap-4">
+    <div className="flex flex-col md:flex-row justify-between gap-6">
       <div className="h-full mb-10">
         <RestaurantSidebar restaurant={restaurant} />
       </div>
-      <div className="flex-1 justify-center md:justify-end mx-4 my-4">
-        {!isAddNew && menu.length ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {menu.map((dish, index) => (
-              <Card key={index} className="max-w-xs">
-                <img
-                  src={dish.image}
-                  alt={dish.name}
-                  className="rounded-t-lg"
-                />
-                <div className="p-4">
-                  <h5 className="text-xl font-semibold">{dish.name}</h5>
-                  <p className="text-gray-600 mt-2">{dish.description}</p>
-                  <p className="text-lg font-bold mt-2">₹{dish.price}</p>
-                </div>
-              </Card>
-            ))}
-            <Card
-              className="max-w-xs cursor-pointer hover:shadow-lg transition-shadow duration-300 bg-blue-200"
-              onClick={handleClickAddNew} // Triggers function when the card is clicked
-            >
-              <div className="p-4 flex flex-col items-center">
-                <h5 className="text-xl font-semibold mb-4">Add Another Dish</h5>
-                <IoAddCircleSharp className="text-4xl" />
-              </div>
-            </Card>
+
+      <div className="flex-1 justify-center mx-4 my-4">
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Spinner size="lg" className="text-indigo-600" />
           </div>
+        ) : !isAddNew && menu.length ? (
+          <MenuCards
+            menu={menu}
+            isAddNew={isAddNew}
+            handleClickAddNew={handleClickAddNew}
+          />
         ) : (
-          <div className="flex-1">
-            <h2 className="mb-5 text-lg text-black-500 dark:text-gray-400">
-              Take The next Step add your First Dish !!
-            </h2>
-            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-              <div>
-                <Label value="Dish Name" />
-                <TextInput
-                  type="text"
-                  placeholder="Pancakes"
-                  id="name"
-                  onChange={onChangeHandler}
-                />
-              </div>
-              <div>
-                <Label value="Description" />
-                <TextInput
-                  type="text"
-                  placeholder="Pancakes brings a delightful breakfast experience to life with its irresistible variety of pancake flavors."
-                  id="description"
-                  onChange={onChangeHandler}
-                />
-              </div>
-              <div>
-                <Label value="Price" />
-                <TextInput
-                  type="text"
-                  placeholder="₹ 80"
-                  id="price"
-                  onChange={onChangeHandler}
-                />
-              </div>
-              <div>
-                <FileInput
-                  id="image"
-                  accept="image/*"
-                  helperText="Upload Pic"
-                  onChange={handleImageChange}
-                />
-              </div>
-              {/* Progress Bar */}
-              {uploadProgress > 0 && (
-                <Progress
-                  progress={uploadProgress}
-                  color="purple"
-                  label={`${uploadProgress}%`}
-                  className="mt-2"
-                />
-              )}
-              <Button
-                gradientDuoTone={"purpleToPink"}
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Spinner size="sm" />
-                    <span className="pl-3">Loading..</span>
-                  </>
-                ) : (
-                  "SignUp"
-                )}
-              </Button>
-            </form>
-            {createRestaurantSuccess && (
-              <Alert color="success" className="mt-5">
-                {createRestaurantSuccess}
-              </Alert>
-            )}
-            {errorMessage && (
-              <Alert className="mt-5" color="failure">
-                {errorMessage}
-              </Alert>
-            )}
-          </div>
+          <AddDish
+            menu={menu}
+            handleSubmit={handleSubmit}
+            onChangeHandler={onChangeHandler}
+            handleImageChange={handleImageChange}
+            uploadProgress={uploadProgress}
+            formLoading={formLoading}
+            createRestaurantSuccess={createRestaurantSuccess}
+            errorMessage={errorMessage}
+          />
         )}
       </div>
     </div>
