@@ -14,6 +14,7 @@ import { AddDish } from "../components/AddDish";
 import AddRestaurant from "../components/AddRestaurant";
 import UpdateRestaurant from "../components/UpdateRestaurant";
 import { useSelector } from "react-redux";
+import Orders from "../components/Orders"; // Import Orders component
 
 export const RestaurantMenus = (props) => {
   const restaurant = props.restaurant;
@@ -29,6 +30,7 @@ export const RestaurantMenus = (props) => {
   const [createRestaurantSuccess, setCreateRestaurantSuccess] = useState("");
   const [updateRestaurantSuccess, setUpdateRestaurantSuccess] = useState("");
   const [isAddNew, setIsAddNew] = useState(false);
+  const [showOrders, setShowOrders] = useState(false); // New state for toggling between menu and orders
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -146,6 +148,11 @@ export const RestaurantMenus = (props) => {
     );
   };
 
+  // Function to toggle between Orders and Menu
+  const toggleView = () => {
+    setShowOrders((prevState) => !prevState);
+  };
+
   return (
     <div className="flex flex-col md:flex-row justify-between gap-6">
       <div className="h-full mb-10">
@@ -157,6 +164,14 @@ export const RestaurantMenus = (props) => {
       </div>
 
       <div className="flex-1 justify-center mx-4 my-4">
+        {/* Button to toggle between Orders and Menu */}
+        <button
+          onClick={toggleView}
+          className="px-4 py-2 bg-indigo-500 text-white rounded-lg mb-4 shadow-md dark:bg-indigo-700"
+        >
+          {showOrders ? "View Menu" : "View Orders"}
+        </button>
+
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <Spinner size="lg" className="text-indigo-600" />
@@ -171,6 +186,8 @@ export const RestaurantMenus = (props) => {
             updateRestaurantSuccess={updateRestaurantSuccess}
             errorMessage={errorMessage}
           />
+        ) : showOrders ? (
+          <Orders restaurantid={restaurant._id} /> // Show Orders component when toggled
         ) : !isAddNew && menu.length ? (
           <MenuCards
             menu={menu}
