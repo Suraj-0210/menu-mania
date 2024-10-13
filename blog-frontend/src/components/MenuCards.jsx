@@ -164,7 +164,7 @@ const DishCard = ({ dish, deleteDish, updateDishStock }) => {
             style={{
               maxHeight: "140px",
               overflowY: "auto",
-              color: stock === 0 ? "red" : "inherit",
+              background: stock === 0 ? "red" : "inherit",
             }} // Make dropdown scrollable
           >
             {[...Array(21).keys()].map((num) => (

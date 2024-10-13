@@ -132,12 +132,9 @@ export default function DashProfile(props) {
       const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
       });
-      const resDeleteRestaurant = await fetch(
-        `/api/restaurant/delete/${currentRestaurant._id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await fetch(`/api/restaurant/delete/${currentRestaurant._id}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
       console.log(res.ok);
       if (!res.ok) {
