@@ -161,7 +161,11 @@ const DishCard = ({ dish, deleteDish, updateDishStock }) => {
             value={stock}
             onChange={handleStockChange}
             className="px-3 py-1 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-md focus:ring focus:ring-teal-200 dark:focus:ring-teal-500 transition duration-200"
-            style={{ maxHeight: "140px", overflowY: "auto" }} // Make dropdown scrollable
+            style={{
+              maxHeight: "140px",
+              overflowY: "auto",
+              color: stock === 0 ? "red" : "inherit",
+            }} // Make dropdown scrollable
           >
             {[...Array(21).keys()].map((num) => (
               <option key={num} value={num}>
