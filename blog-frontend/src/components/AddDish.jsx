@@ -6,6 +6,7 @@ import {
   Progress,
   Spinner,
   TextInput,
+  Select,
 } from "flowbite-react";
 
 export const AddDish = ({
@@ -25,6 +26,7 @@ export const AddDish = ({
         Take the next step, add your {menu.length ? "next" : "first"} dish!
       </h2>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        {/* Dish Name */}
         <div>
           <Label
             className="text-gray-700 dark:text-gray-300"
@@ -38,6 +40,8 @@ export const AddDish = ({
             className="rounded-md dark:bg-gray-700 dark:text-gray-200"
           />
         </div>
+
+        {/* Description */}
         <div>
           <Label
             className="text-gray-700 dark:text-gray-300"
@@ -51,6 +55,8 @@ export const AddDish = ({
             className="rounded-md dark:bg-gray-700 dark:text-gray-200"
           />
         </div>
+
+        {/* Price */}
         <div>
           <Label className="text-gray-700 dark:text-gray-300" value="Price" />
           <TextInput
@@ -61,6 +67,42 @@ export const AddDish = ({
             className="rounded-md dark:bg-gray-700 dark:text-gray-200"
           />
         </div>
+
+        {/* Stock */}
+        <div>
+          <Label className="text-gray-700 dark:text-gray-300" value="Stock" />
+          <TextInput
+            type="number"
+            min={1}
+            placeholder="Enter stock quantity"
+            id="stock"
+            onChange={onChangeHandler}
+            className="rounded-md dark:bg-gray-700 dark:text-gray-200"
+          />
+        </div>
+
+        {/* Category Dropdown */}
+        <div>
+          <Label
+            className="text-gray-700 dark:text-gray-300"
+            value="Category"
+          />
+          <Select
+            id="category"
+            onChange={onChangeHandler}
+            className="rounded-md dark:bg-gray-700 dark:text-gray-200"
+          >
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Snacks">Snacks</option>
+            <option value="Biriyani">Biriyani</option>
+          </Select>
+        </div>
+
+        {/* Image Upload */}
         <div>
           <FileInput
             id="image"
@@ -70,6 +112,8 @@ export const AddDish = ({
             className="dark:text-gray-200"
           />
         </div>
+
+        {/* Upload Progress */}
         {uploadProgress > 0 && (
           <Progress
             progress={uploadProgress}
@@ -78,6 +122,8 @@ export const AddDish = ({
             className="mt-2 rounded-full dark:bg-gray-600 dark:text-gray-100"
           />
         )}
+
+        {/* Submit Button */}
         <Button
           gradientDuoTone="purpleToPink"
           type="submit"
@@ -93,6 +139,7 @@ export const AddDish = ({
           )}
         </Button>
 
+        {/* Cancel Button */}
         {menu?.length ? (
           <Button
             onClick={handleClickAddNew}
@@ -104,24 +151,25 @@ export const AddDish = ({
         ) : (
           ""
         )}
-      </form>
 
-      {createRestaurantSuccess && (
-        <Alert
-          color="success"
-          className="mt-5 dark:bg-green-600 dark:text-gray-100"
-        >
-          {createRestaurantSuccess}
-        </Alert>
-      )}
-      {errorMessage && (
-        <Alert
-          className="mt-5 dark:bg-red-600 dark:text-gray-100"
-          color="failure"
-        >
-          {errorMessage}
-        </Alert>
-      )}
+        {/* Success & Error Messages */}
+        {createRestaurantSuccess && (
+          <Alert
+            color="success"
+            className="mt-5 dark:bg-green-600 dark:text-gray-100"
+          >
+            {createRestaurantSuccess}
+          </Alert>
+        )}
+        {errorMessage && (
+          <Alert
+            className="mt-5 dark:bg-red-600 dark:text-gray-100"
+            color="failure"
+          >
+            {errorMessage}
+          </Alert>
+        )}
+      </form>
     </div>
   );
 };

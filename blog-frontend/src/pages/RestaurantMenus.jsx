@@ -190,9 +190,9 @@ export const RestaurantMenus = (props) => {
           <Orders restaurantid={restaurant._id} /> // Show Orders component when toggled
         ) : !isAddNew && menu.length ? (
           <MenuCards
-            menu={menu}
             isAddNew={isAddNew}
             handleClickAddNew={handleClickAddNew}
+            restaurant={restaurant}
           />
         ) : (
           <AddDish
