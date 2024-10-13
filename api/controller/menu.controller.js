@@ -8,7 +8,6 @@ export const test = (req, res) => {
 export const createRecepie = async (req, res, next) => {
   const { name, description, price, image, stock, restaurantid, category } =
     req.body;
-  console.log(name, description, price, image, restaurantid);
 
   if (
     !name ||
@@ -50,8 +49,6 @@ export const createRecepie = async (req, res, next) => {
 
 export const updateRecepie = async (req, res, next) => {
   const { name, description, price, image, stock, category } = req.body;
-
-  console.log(name, description, price, image, stock, category);
 
   if (
     !name ||
