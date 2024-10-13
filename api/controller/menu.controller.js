@@ -6,7 +6,8 @@ export const test = (req, res) => {
 };
 
 export const createRecepie = async (req, res, next) => {
-  const { name, description, price, image, restaurantid } = req.body;
+  const { name, description, price, image, stock, restaurantid, category } =
+    req.body;
   console.log(name, description, price, image, restaurantid);
 
   if (
@@ -15,11 +16,15 @@ export const createRecepie = async (req, res, next) => {
     !price ||
     !image ||
     !restaurantid ||
+    !category ||
+    !stock ||
     name === "" ||
     description === "" ||
     price === "" ||
     image === "" ||
-    restaurantid === ""
+    restaurantid === "" ||
+    category === "" ||
+    stock === ""
   ) {
     return next(errorHandler(400, "All fields are required!!"));
   }
@@ -30,12 +35,58 @@ export const createRecepie = async (req, res, next) => {
     description,
     price,
     image,
+    category,
+    stock,
   });
 
   try {
-    await newMenu.save();
-    const menu = await Menu.findOne({ name });
-    res.json(menu._doc);
+    const savedMenu = await newMenu.save();
+    res.json(savedMenu._doc);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+export const updateRecepie = async (req, res, next) => {
+  const { name, description, price, image, stock, category } = req.body;
+
+  if (
+    !name ||
+    !description ||
+    !price ||
+    !image ||
+    !category ||
+    !stock ||
+    name === "" ||
+    description === "" ||
+    price === "" ||
+    image === "" ||
+    category === "" ||
+    stock === ""
+  ) {
+    return next(errorHandler(400, "All fields are required to update!"));
+  }
+
+  try {
+    const updatedMenu = await Menu.findByIdAndUpdate(
+      req.params.recepieid,
+      {
+        name,
+        description,
+        price,
+        image,
+        stock,
+        category,
+      },
+      { new: true } // This returns the updated document
+    );
+
+    if (!updatedMenu) {
+      return next(errorHandler(404, "Menu item not found"));
+    }
+
+    res.status(200).json(updatedMenu);
   } catch (error) {
     console.log(error);
     next(error);
@@ -44,7 +95,7 @@ export const createRecepie = async (req, res, next) => {
 
 export const deleteRecepie = async (req, res, next) => {
   try {
-    await Menu.findOneAndDelete({ name: req.params.recepiename });
+    await Menu.findByIdAndDelete(req.params.recepieid);
     res.status(200).json("Recepie has been deleted");
   } catch (error) {
     next(error);
