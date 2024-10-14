@@ -57,17 +57,15 @@ const userSlice = createSlice({
   },
 });
 
-export const {
-  signInFailure,
-  signInStart,
-  signInSuccess,
-  updateStart,
-  updateSuccess,
-  updateFailed,
-  deleteStart,
-  deleteSuccess,
-  deleteFailed,
-  signoutSuccess,
-} = userSlice.actions;
+export const signInFailure = userSlice.actions.signInFailure;
+export const signInStart = userSlice.actions.signInStart;
+export const signInSuccess = userSlice.actions.signInSuccess;
+export const updateStart = userSlice.actions.updateStart;
+export const updateSuccess = userSlice.actions.updateSuccess;
+export const deleteStart = userSlice.actions.deleteStart;
+export const deleteSuccess = userSlice.actions.deleteSuccess;
+export const deleteFailed = userSlice.actions.deleteFailed;
+export const signoutSuccess = userSlice.actions.signoutSuccess;
+export const updateFailed = userSlice.actions.updateFailed;
 
 export default userSlice.reducer;
