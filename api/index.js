@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.route.js";
 import restaurantRoutes from "./routes/restaurant.route.js";
 import cookieParser from "cookie-parser";
 import menuRoutes from "./routes/menu.route.js";
+import path from "path";
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -41,6 +44,12 @@ app.use("/api/menu", menuRoutes);
 app.get("/", (req, res) => {
   res.send("Your are Ready to GO!!");
 });
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "front-end", "dist", "index.html"));
+});
+
+app.use(express.static(path.join(__dirname, "/blog-frontend/dist")));
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
