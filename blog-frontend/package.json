@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.7",
+    "@reduxjs/toolkit": "^2.2.8",
     "firebase": "^10.13.1",
     "flowbite-react": "^0.10.1",
     "qrcode.react": "^4.0.1",
