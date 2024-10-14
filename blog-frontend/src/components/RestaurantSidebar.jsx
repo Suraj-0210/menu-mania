@@ -100,7 +100,7 @@ export const RestaurantSidebar = (props) => {
               ref={qrCodeRef}
             >
               <QRCodeCanvas
-                value={`https://menumania-end-user.netlify.app/${currentRestaurant._id}?table=${selectedTable}`} // The URL you want to encode
+                value={`https://endusermenumania-1.onrender.com/${currentRestaurant._id}?table=${selectedTable}`} // The URL you want to encode
                 size={128} // Adjust size as needed
                 bgColor={"#ffffff"}
                 fgColor={"#000000"}

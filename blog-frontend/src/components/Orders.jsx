@@ -15,7 +15,7 @@ const Orders = ({ restaurantid }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3001/api/orders/restaurant/${restaurantid}`,
+        `https://endusermenumania.onrender.com/api/orders/restaurant/${restaurantid}`,
         {
           // Adjust API route if necessary
           method: "GET",
@@ -37,7 +37,7 @@ const Orders = ({ restaurantid }) => {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const res = await fetch(
-        `http://localhost:3001/api/orders/${orderId}/status`,
+        `https://endusermenumania.onrender.com/api/orders/${orderId}/status`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
