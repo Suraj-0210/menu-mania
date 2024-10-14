@@ -7,7 +7,6 @@ export const test = (req, res) => {
 
 export const createRestaurant = async (req, res, next) => {
   const { user_id, restaurantname, address, logo, tables } = req.body;
-  console.log("tables:" + typeof Number(tables));
 
   if (
     !user_id ||
@@ -77,7 +76,6 @@ export const updateRestaurant = async (req, res, next) => {
       }
     );
 
-    console.log(updateRestaurant._doc);
     res.status(200).json(updatedRestaurant._doc);
   } catch (error) {
     console.log(error);
@@ -107,7 +105,6 @@ export const fetchRestaurants = async (req, res, next) => {
   } catch (error) {}
 };
 export const getRestaurant = async (req, res, next) => {
-  console.log("get Restaurant called");
   try {
     const restaurant = await Restaurant.findById(req.params.restaurantid);
     res.send(restaurant);
