@@ -38,6 +38,10 @@ app.use("/api/restaurant", restaurantRoutes);
 
 app.use("/api/menu", menuRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Your are Ready to GO!!");
+});
+
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
