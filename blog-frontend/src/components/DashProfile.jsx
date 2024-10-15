@@ -19,7 +19,7 @@ import {
   deleteSuccess,
   deleteFailed,
   signoutSuccess,
-} from "../redux/User/userSlice";
+} from "../redux/User/userSlice.js";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

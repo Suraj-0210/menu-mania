@@ -3,7 +3,7 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-import { signInSuccess } from "../redux/User/userSlice";
+import { signInSuccess } from "../redux/User/userSlice.js";
 import { useNavigate } from "react-router-dom";
 
 export default function OAuth() {
