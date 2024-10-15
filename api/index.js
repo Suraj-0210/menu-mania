@@ -7,6 +7,7 @@ import restaurantRoutes from "./routes/restaurant.route.js";
 import cookieParser from "cookie-parser";
 import menuRoutes from "./routes/menu.route.js";
 import path from "path";
+import cors from "cors";
 
 dotenv.config();
 
@@ -22,6 +23,15 @@ mongoose
 const __dirname = path.resolve();
 
 const app = express();
+
+// Configure CORS options
+const corsOptions = {
+  origin: "https://menumania.vercel.app", // Allow only this origin
+  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
+  credentials: true, // Allow credentials (if needed)
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
