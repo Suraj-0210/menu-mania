@@ -28,14 +28,17 @@ export const RestaurantSidebar = (props) => {
     setShowModal(false);
     try {
       const res = await fetch(
-        `/api/restaurant/delete/${currentRestaurant._id}`,
+        `https://menu-mania.onrender.com/api/restaurant/delete/${currentRestaurant._id}`,
         {
           method: "DELETE",
         }
       );
-      await fetch(`/api/menu/deleteAll/${currentRestaurant._id}`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `https://menu-mania.onrender.com/api/menu/deleteAll/${currentRestaurant._id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (res.ok) {
         console.log("Restaurant Deleted");
         navigate(0);

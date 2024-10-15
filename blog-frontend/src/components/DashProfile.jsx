@@ -104,13 +104,16 @@ export default function DashProfile(props) {
     }
     try {
       dispatch(updateStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `https://menu-mania.onrender.com/api/user/update/${currentUser._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       if (!res.ok) {
         dispatch(updateFailed(data.message));
@@ -129,12 +132,18 @@ export default function DashProfile(props) {
     setShowModal(false);
     try {
       dispatch(deleteStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: "DELETE",
-      });
-      await fetch(`/api/restaurant/delete/${currentRestaurant._id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://menu-mania.onrender.com/api/user/delete/${currentUser._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      await fetch(
+        `https://menu-mania.onrender.com/api/restaurant/delete/${currentRestaurant._id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       console.log(res.ok);
       if (!res.ok) {
@@ -152,9 +161,12 @@ export default function DashProfile(props) {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("/api/user/signout", {
-        method: "POST",
-      });
+      const res = await fetch(
+        "https://menu-mania.onrender.com/api/user/signout",
+        {
+          method: "POST",
+        }
+      );
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);

@@ -34,10 +34,13 @@ const UpdateRestaurant = ({
   useEffect(() => {
     const fetchRestaurantData = async () => {
       try {
-        const res = await fetch(`/api/restaurant/${restaurantId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+        const res = await fetch(
+          `https://menu-mania.onrender.com/api/restaurant/${restaurantId}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         const data = await res.json();
         if (res.ok) {
           setFormData(data); // Pre-fill form data with the restaurant details
@@ -71,11 +74,14 @@ const UpdateRestaurant = ({
     }
 
     try {
-      const res = await fetch(`/api/restaurant/update/${restaurantId}`, {
-        method: "PUT", // Use PUT for update
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `https://menu-mania.onrender.com/api/restaurant/update/${restaurantId}`,
+        {
+          method: "PUT", // Use PUT for update
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
       if (data.success === false) {

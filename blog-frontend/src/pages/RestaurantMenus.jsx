@@ -40,10 +40,13 @@ export const RestaurantMenus = (props) => {
   const fetchMenus = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/menu/${restaurant._id}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `https://menu-mania.onrender.com/api/menu/${restaurant._id}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       if (!res.ok) {
         throw new Error("Network response was not ok");
       }
@@ -80,11 +83,14 @@ export const RestaurantMenus = (props) => {
 
     try {
       setFormLoading(true);
-      const res = await fetch("/api/menu/createRecepie", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://menu-mania.onrender.com/api/menu/createRecepie",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
       if (data.success === false) {

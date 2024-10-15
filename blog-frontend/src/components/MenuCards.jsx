@@ -16,10 +16,13 @@ export const MenuCards = (props) => {
 
   const fetchMenus = async () => {
     try {
-      const res = await fetch(`/api/menu/${restaurant._id}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `https://menu-mania.onrender.com/api/menu/${restaurant._id}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       if (!res.ok) {
         throw new Error("Network response was not ok");
       }
@@ -32,10 +35,13 @@ export const MenuCards = (props) => {
 
   const deleteDish = async (e, dishId) => {
     try {
-      const res = await fetch(`/api/menu/delete/${dishId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `https://menu-mania.onrender.com/api/menu/delete/${dishId}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       await res.json();
       if (res.ok) {
         toast.success("Dish deleted successfully!", {
@@ -55,11 +61,14 @@ export const MenuCards = (props) => {
   const updateDishStock = async (dish, newStock) => {
     const newDish = { ...dish, stock: newStock };
     try {
-      const res = await fetch(`/api/menu/update/${newDish._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newDish),
-      });
+      const res = await fetch(
+        `https://menu-mania.onrender.com/api/menu/update/${newDish._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newDish),
+        }
+      );
 
       if (res.ok) {
         toast.success("Stock quantity updated successfully!", {
