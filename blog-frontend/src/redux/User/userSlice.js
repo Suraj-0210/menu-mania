@@ -68,4 +68,4 @@ export const deleteFailed = userSlice.actions.deleteFailed;
 export const signoutSuccess = userSlice.actions.signoutSuccess;
 export const updateFailed = userSlice.actions.updateFailed;
 
-export default userSlice.reducer;
+export const userSliceReducer = userSlice.reducer;
