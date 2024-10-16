@@ -74,11 +74,13 @@ const UpdateRestaurant = ({
     }
 
     try {
+      console.log("Cookies before fetch:", document.cookie);
       const res = await fetch(
         `https://menu-mania.onrender.com/api/restaurant/update/${restaurantId}`,
         {
           method: "PUT", // Use PUT for update
           headers: { "Content-Type": "application/json" },
+          credentials: true,
           body: JSON.stringify(formData),
         }
       );
