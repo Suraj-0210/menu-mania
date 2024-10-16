@@ -34,6 +34,8 @@ export default function OAuth() {
 
       const data = await res.json();
 
+      document.cookie = `access_token=${data.access_token}; path=/;`;
+
       if (res.ok) {
         dispatch(signInSuccess(data));
         navigate("/");

@@ -65,9 +65,11 @@ export const signin = async (req, res, next) => {
     res
       .status(200)
       .cookie("access_token", token, {
-        httpOnly: true,
+        httpOnly: false,
+        sameSite: "None",
+        secure: true,
       })
-      .json(rest);
+      .json({ ...rest, access_token: token });
   } catch (error) {
     next(error);
   }
@@ -87,9 +89,11 @@ export const google = async (req, res, next) => {
       res
         .status(200)
         .cookie("access_token", token, {
-          httpOnly: true,
+          httpOnly: false,
+          sameSite: "None",
+          secure: true,
         })
-        .json(rest);
+        .json({ ...rest, access_token: token });
     } else {
       const generatedPassword =
         Math.random().toString(36).slice(-9) +
@@ -116,9 +120,11 @@ export const google = async (req, res, next) => {
       res
         .status(200)
         .cookie("access_token", token, {
-          httpOnly: true,
+          httpOnly: false,
+          sameSite: "None",
+          secure: true,
         })
-        .json(rest);
+        .json({ ...rest, access_token: token });
     }
   } catch (error) {
     next(error);

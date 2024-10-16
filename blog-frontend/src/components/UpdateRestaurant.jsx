@@ -74,7 +74,6 @@ const UpdateRestaurant = ({
     }
 
     try {
-      console.log("Cookies before fetch:", document.cookie);
       const res = await fetch(
         `https://menu-mania.onrender.com/api/restaurant/update/${restaurantId}`,
         {
