@@ -24,13 +24,26 @@ export const RestaurantSidebar = (props) => {
     a.click();
   };
 
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
+
   const handleDeleteRestaurant = async () => {
     setShowModal(false);
     try {
+      const accessToken = getCookie("access_token");
+
       const res = await fetch(
         `https://menu-mania.onrender.com/api/restaurant/delete/${currentRestaurant._id}`,
         {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`, // Include token in headers
+          },
+          credentials: "include",
         }
       );
       await fetch(
