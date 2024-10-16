@@ -217,7 +217,6 @@ export default function DashProfile(props) {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="user"
-            crossOrigin="anonymous"
             className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
               imageFileUploadProgress &&
               imageFileUploadProgress < 100 &&
