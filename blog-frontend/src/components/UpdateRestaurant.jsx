@@ -79,7 +79,6 @@ const UpdateRestaurant = ({
         {
           method: "PUT", // Use PUT for update
           headers: { "Content-Type": "application/json" },
-          credentials: true,
           body: JSON.stringify(formData),
         }
       );
