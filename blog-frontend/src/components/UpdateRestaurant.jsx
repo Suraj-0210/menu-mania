@@ -65,6 +65,12 @@ const UpdateRestaurant = ({
     });
   };
 
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -76,12 +82,18 @@ const UpdateRestaurant = ({
     try {
       console.log("Cookies before fetch:");
       console.log(document.cookie);
-      console.log(document.cookie.access_token);
+
+      const accessToken = getCookie("access_token");
+      console.log("Access Token:", accessToken);
+
       const res = await fetch(
         `https://menu-mania.onrender.com/api/restaurant/update/${restaurantId}`,
         {
           method: "PUT", // Use PUT for update
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`, // Include token in headers
+          },
           credentials: "include",
           body: JSON.stringify(formData),
         }
