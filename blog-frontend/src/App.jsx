@@ -8,6 +8,8 @@ import Header from "./components/Header";
 import { FooterCom } from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import Restaurants from "./pages/Restaurants";
+import Blogs from "./pages/Blogs";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/contact" element={<Contact />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/restaurants" element={<Restaurants />} />

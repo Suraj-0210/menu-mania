@@ -22,18 +22,18 @@ export const FooterCom = () => {
               <Footer.Title title="About" />
               <Footer.LinkGroup col>
                 <Footer.Link
-                  href="#"
+                  href="./contact"
                   target="_parent"
                   rel="noopener noreferrer"
                 >
-                  Projects
+                  Contact
                 </Footer.Link>
                 <Footer.Link
-                  href="#"
+                  href="./blogs"
                   target="_parent"
                   rel="noopener noreferrer"
                 >
-                  Blog
+                  Blogs
                 </Footer.Link>
               </Footer.LinkGroup>
             </div>
@@ -41,13 +41,18 @@ export const FooterCom = () => {
               <Footer.Title title="Follow us" />
               <Footer.LinkGroup col>
                 <Footer.Link
-                  href="#"
-                  target="_parent"
+                  href="https://www.linkedin.com/in/suryakanta-prusty-aa1542227/"
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   Linkedin
                 </Footer.Link>
-                <Footer.Link href="#">Github</Footer.Link>
+                <Footer.Link
+                  href="https://github.com/suraj-0210"
+                  target="_blank"
+                >
+                  Github
+                </Footer.Link>
               </Footer.LinkGroup>
             </div>
             <div>
