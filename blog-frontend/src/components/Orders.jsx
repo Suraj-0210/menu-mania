@@ -134,7 +134,7 @@ const Orders = ({ restaurantid }) => {
         </div>
       ) : (
         <p className="text-gray-600 dark:text-gray-300 text-center mt-10">
-          No orders found.
+          No orders yet. Sit back let the customers in.
         </p>
       )}
 
