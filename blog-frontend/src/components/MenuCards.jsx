@@ -37,7 +37,7 @@ export const MenuCards = (props) => {
     try {
       // First, delete orders associated with this menu item (dish)
       const orderRes = await fetch(
-        `https://endusermenumania-1.onrender.com/api/orders/menu/${dishId}`,
+        `https://endusermenumania.onrender.com/api/orders/menu/${dishId}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
