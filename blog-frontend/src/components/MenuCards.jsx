@@ -44,10 +44,6 @@ export const MenuCards = (props) => {
         }
       );
 
-      if (!orderRes.ok) {
-        throw new Error("Failed to delete associated orders.");
-      }
-
       // Now delete the dish itself
       const res = await fetch(
         `https://menu-mania.onrender.com/api/menu/delete/${dishId}`,
