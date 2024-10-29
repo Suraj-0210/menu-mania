@@ -206,6 +206,8 @@ const OrderCard = ({ order, handleStatusChange }) => (
           className={`px-2 py-1 rounded-full ${
             order.Status === "Pending"
               ? "bg-yellow-200 text-yellow-800"
+              : order.Status === "Confirmed" // Add condition for Confirmed status
+              ? "bg-yellow-200 text-yellow-800" // Keep the same styles for Confirmed
               : order.Status === "Preparing"
               ? "bg-blue-200 text-blue-800"
               : order.Status === "Completed"
