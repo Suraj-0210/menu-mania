@@ -26,7 +26,13 @@ const Orders = ({ restaurantid }) => {
         throw new Error("Error fetching orders");
       }
       const data = await res.json();
-      setOrders(data);
+
+      // Sort orders with "Delivered" status at the bottom
+      const sortedOrders = data.sort((a, b) =>
+        a.Status === "Delivered" ? 1 : b.Status === "Delivered" ? -1 : 0
+      );
+
+      setOrders(sortedOrders);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -49,11 +55,15 @@ const Orders = ({ restaurantid }) => {
       }
       await res.json();
 
-      // Update the order status in the frontend after successful API call
+      // Update the order status in the frontend and re-sort orders
       setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.OrderId === orderId ? { ...order, Status: newStatus } : order
-        )
+        prevOrders
+          .map((order) =>
+            order.OrderId === orderId ? { ...order, Status: newStatus } : order
+          )
+          .sort((a, b) =>
+            a.Status === "Delivered" ? 1 : b.Status === "Delivered" ? -1 : 0
+          )
       );
     } catch (error) {
       setError(error.message);
