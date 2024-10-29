@@ -13,6 +13,7 @@ const Orders = ({ restaurantid }) => {
 
   const fetchOrders = async () => {
     setLoading(true);
+    setError(null); // Reset error state before fetching
     try {
       const res = await fetch(
         `https://endusermenumania.onrender.com/api/orders/restaurant/${restaurantid}`,
@@ -21,13 +22,15 @@ const Orders = ({ restaurantid }) => {
           headers: { "Content-Type": "application/json" },
         }
       );
+
       if (!res.ok) {
-        throw new Error("Error fetching orders");
+        throw new Error("Failed to fetch orders. Please try again later.");
       }
+
       const data = await res.json();
 
       // Check if data is empty or null
-      if (!data || data.length === 0) {
+      if (!data || !Array.isArray(data)) {
         setOrders([]); // Set orders to an empty array
         return; // Exit early
       }
@@ -61,9 +64,11 @@ const Orders = ({ restaurantid }) => {
           body: JSON.stringify({ status: newStatus }),
         }
       );
+
       if (!res.ok) {
-        throw new Error("Failed to update order status");
+        throw new Error("Failed to update order status. Please try again.");
       }
+
       await res.json();
 
       // Update the order status in the frontend and re-sort orders
@@ -104,7 +109,7 @@ const Orders = ({ restaurantid }) => {
   }
 
   if (error) {
-    return <div className="text-red-600">{error}</div>;
+    return <div className="text-red-600 text-center">{error}</div>;
   }
 
   // Separate orders for rendering
@@ -139,6 +144,8 @@ const Orders = ({ restaurantid }) => {
           <hr className="border-gray-300" />
         </div>
       )}
+
+      {/* Delivered Orders Sections */}
 
       {/* Delivered Orders (Pay After Service) Section */}
       {deliveredOrders.filter(
