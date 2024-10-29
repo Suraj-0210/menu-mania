@@ -26,15 +26,20 @@ const Orders = ({ restaurantid }) => {
       }
       const data = await res.json();
 
-      // Sort orders with "Delivered" status and specific PaymentId at the bottom
+      // Sort orders with "Delivered" status at the bottom and specific OrderId pattern
       const sortedOrders = data.sort((a, b) => {
-        if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
-          return 1;
-        if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
-          return -1;
-        if (a.Status === "Delivered") return 1; // Delivered goes last
-        if (b.Status === "Delivered") return -1; // Delivered goes last
-        return 0; // Keep other statuses in order
+        if (a.Status === "Delivered" && b.Status !== "Delivered") return 1;
+        if (b.Status === "Delivered" && a.Status !== "Delivered") return -1;
+
+        // Check for payment ID pattern
+        const aIsPaidOnline = a.OrderId.startsWith("pay_");
+        const bIsPaidOnline = b.OrderId.startsWith("pay_");
+
+        if (a.Status === "Delivered" && b.Status === "Delivered") {
+          return aIsPaidOnline ? 1 : bIsPaidOnline ? -1 : 0;
+        }
+
+        return 0; // Maintain original order for other statuses
       });
 
       setOrders(sortedOrders);
@@ -67,13 +72,18 @@ const Orders = ({ restaurantid }) => {
             order.OrderId === orderId ? { ...order, Status: newStatus } : order
           )
           .sort((a, b) => {
-            if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
-              return 1;
-            if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
-              return -1;
-            if (a.Status === "Delivered") return 1;
-            if (b.Status === "Delivered") return -1;
-            return 0;
+            if (a.Status === "Delivered" && b.Status !== "Delivered") return 1;
+            if (b.Status === "Delivered" && a.Status !== "Delivered") return -1;
+
+            // Check for payment ID pattern
+            const aIsPaidOnline = a.OrderId.startsWith("pay_");
+            const bIsPaidOnline = b.OrderId.startsWith("pay_");
+
+            if (a.Status === "Delivered" && b.Status === "Delivered") {
+              return aIsPaidOnline ? 1 : bIsPaidOnline ? -1 : 0;
+            }
+
+            return 0; // Maintain original order for other statuses
           })
       );
     } catch (error) {
@@ -101,7 +111,7 @@ const Orders = ({ restaurantid }) => {
     return <div className="text-red-600">{error}</div>;
   }
 
-  // Separate orders for rendering
+  // Separate orders
   const deliveredOrders = orders.filter(
     (order) => order.Status === "Delivered"
   );
@@ -146,16 +156,17 @@ const Orders = ({ restaurantid }) => {
         </div>
       ) : null}
 
-      {/* Special section for delivered orders with PaymentId starting with "pay_" */}
-      {deliveredOrders.filter((order) => order.PaymentId.startsWith("pay_"))
-        .length > 0 && (
+      {/* Special section for delivered orders with PaymentId "Pay_After_Service" */}
+      {deliveredOrders.filter(
+        (order) => order.PaymentId === "Pay_After_Service"
+      ).length > 0 && (
         <div className="mt-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Delivered Orders (Paid Online)
+            Delivered Orders (Pay After Service)
           </h2>
           <div className="space-y-6">
             {deliveredOrders
-              .filter((order) => order.PaymentId.startsWith("pay_"))
+              .filter((order) => order.PaymentId === "Pay_After_Service")
               .map((order) => (
                 <OrderCard
                   key={order.OrderId}
