@@ -26,6 +26,12 @@ const Orders = ({ restaurantid }) => {
       }
       const data = await res.json();
 
+      // Check if data is empty or null
+      if (!data || data.length === 0) {
+        setOrders([]); // Set orders to an empty array
+        return; // Exit early
+      }
+
       // Sort orders with "Delivered" status and specific PaymentId at the bottom
       const sortedOrders = data.sort((a, b) => {
         if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
@@ -122,20 +128,9 @@ const Orders = ({ restaurantid }) => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center h-64">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-            No Orders Yet!
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">
-            It seems there are currently no orders to display. Please check back
-            later.
-          </p>
-          <img
-            src="/path/to/empty-orders-image.svg"
-            alt="No Orders"
-            className="mt-4 w-48 h-auto"
-          />
-        </div>
+        <p className="text-gray-600 dark:text-gray-300 text-center mt-10">
+          No orders found.
+        </p>
       )}
 
       {/* Horizontal Line */}
@@ -144,8 +139,6 @@ const Orders = ({ restaurantid }) => {
           <hr className="border-gray-300" />
         </div>
       )}
-
-      {/* Delivered Orders Sections */}
 
       {/* Delivered Orders (Pay After Service) Section */}
       {deliveredOrders.filter(
