@@ -35,6 +35,20 @@ export const MenuCards = (props) => {
 
   const deleteDish = async (e, dishId) => {
     try {
+      // First, delete orders associated with this menu item (dish)
+      const orderRes = await fetch(
+        `https://endusermenumania-1.onrender.com/api/orders/menu/${dishId}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!orderRes.ok) {
+        throw new Error("Failed to delete associated orders.");
+      }
+
+      // Now delete the dish itself
       const res = await fetch(
         `https://menu-mania.onrender.com/api/menu/delete/${dishId}`,
         {
@@ -43,15 +57,16 @@ export const MenuCards = (props) => {
         }
       );
       await res.json();
+
       if (res.ok) {
-        toast.success("Dish deleted successfully!", {
+        toast.success("Dish and associated orders deleted successfully!", {
           position: "top-right",
           autoClose: 2000,
         });
         navigate(0); // Refresh the page
       }
     } catch (error) {
-      toast.error("Failed to delete the dish.", {
+      toast.error("Failed to delete the dish or associated orders.", {
         position: "top-right",
         autoClose: 3000,
       });
