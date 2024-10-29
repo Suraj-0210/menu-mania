@@ -26,10 +26,16 @@ const Orders = ({ restaurantid }) => {
       }
       const data = await res.json();
 
-      // Sort orders with "Delivered" status at the bottom
-      const sortedOrders = data.sort((a, b) =>
-        a.Status === "Delivered" ? 1 : b.Status === "Delivered" ? -1 : 0
-      );
+      // Sort orders with "Delivered" status and specific PaymentId at the bottom
+      const sortedOrders = data.sort((a, b) => {
+        if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
+          return 1;
+        if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
+          return -1;
+        if (a.Status === "Delivered") return 1; // Delivered goes last
+        if (b.Status === "Delivered") return -1; // Delivered goes last
+        return 0; // Keep other statuses in order
+      });
 
       setOrders(sortedOrders);
     } catch (error) {
@@ -60,9 +66,15 @@ const Orders = ({ restaurantid }) => {
           .map((order) =>
             order.OrderId === orderId ? { ...order, Status: newStatus } : order
           )
-          .sort((a, b) =>
-            a.Status === "Delivered" ? 1 : b.Status === "Delivered" ? -1 : 0
-          )
+          .sort((a, b) => {
+            if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
+              return 1;
+            if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
+              return -1;
+            if (a.Status === "Delivered") return 1;
+            if (b.Status === "Delivered") return -1;
+            return 0;
+          })
       );
     } catch (error) {
       setError(error.message);
@@ -89,7 +101,7 @@ const Orders = ({ restaurantid }) => {
     return <div className="text-red-600">{error}</div>;
   }
 
-  // Separate orders
+  // Separate orders for rendering
   const deliveredOrders = orders.filter(
     (order) => order.Status === "Delivered"
   );
@@ -134,17 +146,16 @@ const Orders = ({ restaurantid }) => {
         </div>
       ) : null}
 
-      {/* Special section for delivered orders with PaymentId "Pay_After_Service" */}
-      {deliveredOrders.filter(
-        (order) => order.PaymentId === "Pay_After_Service"
-      ).length > 0 && (
+      {/* Special section for delivered orders with PaymentId starting with "pay_" */}
+      {deliveredOrders.filter((order) => order.PaymentId.startsWith("pay_"))
+        .length > 0 && (
         <div className="mt-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Delivered Orders (Pay After Service)
+            Delivered Orders (Paid Online)
           </h2>
           <div className="space-y-6">
             {deliveredOrders
-              .filter((order) => order.PaymentId === "Pay_After_Service")
+              .filter((order) => order.PaymentId.startsWith("pay_"))
               .map((order) => (
                 <OrderCard
                   key={order.OrderId}
