@@ -122,9 +122,20 @@ const Orders = ({ restaurantid }) => {
           ))}
         </div>
       ) : (
-        <p className="text-gray-600 dark:text-gray-300 text-center mt-10">
-          No orders found
-        </p>
+        <div className="flex flex-col items-center justify-center h-64">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+            No Orders Yet!
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
+            It seems there are currently no orders to display. Please check back
+            later.
+          </p>
+          <img
+            src="/path/to/empty-orders-image.svg"
+            alt="No Orders"
+            className="mt-4 w-48 h-auto"
+          />
+        </div>
       )}
 
       {/* Horizontal Line */}
@@ -133,6 +144,8 @@ const Orders = ({ restaurantid }) => {
           <hr className="border-gray-300" />
         </div>
       )}
+
+      {/* Delivered Orders Sections */}
 
       {/* Delivered Orders (Pay After Service) Section */}
       {deliveredOrders.filter(
@@ -206,8 +219,8 @@ const OrderCard = ({ order, handleStatusChange }) => (
           className={`px-2 py-1 rounded-full ${
             order.Status === "Pending"
               ? "bg-yellow-200 text-yellow-800"
-              : order.Status === "Confirmed" // Add condition for Confirmed status
-              ? "bg-yellow-200 text-yellow-800" // Keep the same styles for Confirmed
+              : order.Status === "Confirmed"
+              ? "bg-yellow-200 text-yellow-800"
               : order.Status === "Preparing"
               ? "bg-blue-200 text-blue-800"
               : order.Status === "Completed"
