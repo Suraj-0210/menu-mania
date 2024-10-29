@@ -5,7 +5,7 @@ const Orders = ({ restaurantid }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedOrderStatus, setSelectedOrderStatus] = useState({}); // To track selected statuses
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState({});
 
   useEffect(() => {
     fetchOrders();
@@ -17,7 +17,6 @@ const Orders = ({ restaurantid }) => {
       const res = await fetch(
         `https://endusermenumania.onrender.com/api/orders/restaurant/${restaurantid}`,
         {
-          // Adjust API route if necessary
           method: "GET",
           headers: { "Content-Type": "application/json" },
         }
@@ -90,80 +89,24 @@ const Orders = ({ restaurantid }) => {
     return <div className="text-red-600">{error}</div>;
   }
 
+  // Separate orders
+  const deliveredOrders = orders.filter(
+    (order) => order.Status === "Delivered"
+  );
+  const nonDeliveredOrders = orders.filter(
+    (order) => order.Status !== "Delivered"
+  );
+
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-      {orders.length ? (
+      {nonDeliveredOrders.length ? (
         <div className="space-y-6">
-          {orders.map((order) => (
-            <div
+          {nonDeliveredOrders.map((order) => (
+            <OrderCard
               key={order.OrderId}
-              className="p-4 bg-white shadow rounded-lg dark:bg-gray-800 hover:shadow-md transition"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  Order #{order.OrderId} - Table {order.TableNo}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Payment ID: {order.PaymentId}
-                </div>
-              </div>
-
-              <ul className="mt-2 space-y-1 text-gray-700 dark:text-gray-300">
-                {order.Items.map((item, idx) => (
-                  <li key={idx} className="text-sm">
-                    <span className="font-medium">{item.Name}</span> -{" "}
-                    {item.Quantity}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex justify-between items-center mt-4">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Status:{" "}
-                  <span
-                    className={`px-2 py-1 rounded-full ${
-                      order.Status === "Pending"
-                        ? "bg-yellow-200 text-yellow-800"
-                        : order.Status === "Preparing"
-                        ? "bg-blue-200 text-blue-800"
-                        : "bg-green-200 text-green-800"
-                    }`}
-                  >
-                    {order.Status}
-                  </span>
-                </div>
-
-                <Dropdown
-                  label="Change Status"
-                  color="indigo"
-                  arrowIcon={true}
-                  inline={true}
-                  className="rounded-lg"
-                >
-                  <Dropdown.Item
-                    onClick={() =>
-                      handleStatusChange(order.OrderId, "Confirmed")
-                    }
-                  >
-                    Confirmed
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() =>
-                      handleStatusChange(order.OrderId, "Preparing")
-                    }
-                  >
-                    Preparing
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() =>
-                      handleStatusChange(order.OrderId, "Delivered")
-                    }
-                  >
-                    Delivered
-                  </Dropdown.Item>
-                </Dropdown>
-              </div>
-            </div>
+              order={order}
+              handleStatusChange={handleStatusChange}
+            />
           ))}
         </div>
       ) : (
@@ -171,8 +114,113 @@ const Orders = ({ restaurantid }) => {
           No orders found
         </p>
       )}
+
+      {/* Horizontal Line */}
+      {deliveredOrders.length > 0 && (
+        <div className="my-4">
+          <hr className="border-gray-300" />
+        </div>
+      )}
+
+      {deliveredOrders.length ? (
+        <div className="space-y-6">
+          {deliveredOrders.map((order) => (
+            <OrderCard
+              key={order.OrderId}
+              order={order}
+              handleStatusChange={handleStatusChange}
+            />
+          ))}
+        </div>
+      ) : null}
+
+      {/* Special section for delivered orders with PaymentId "Pay_After_Service" */}
+      {deliveredOrders.filter(
+        (order) => order.PaymentId === "Pay_After_Service"
+      ).length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Delivered Orders (Pay After Service)
+          </h2>
+          <div className="space-y-6">
+            {deliveredOrders
+              .filter((order) => order.PaymentId === "Pay_After_Service")
+              .map((order) => (
+                <OrderCard
+                  key={order.OrderId}
+                  order={order}
+                  handleStatusChange={handleStatusChange}
+                />
+              ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+const OrderCard = ({ order, handleStatusChange }) => (
+  <div className="p-4 bg-white shadow rounded-lg dark:bg-gray-800 hover:shadow-md transition">
+    <div className="flex justify-between items-center mb-2">
+      <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        Order #{order.OrderId} - Table {order.TableNo}
+      </div>
+      <div className="text-sm text-gray-600 dark:text-gray-300">
+        Payment ID: {order.PaymentId}
+      </div>
+    </div>
+
+    <ul className="mt-2 space-y-1 text-gray-700 dark:text-gray-300">
+      {order.Items.map((item, idx) => (
+        <li key={idx} className="text-sm">
+          <span className="font-medium">{item.Name}</span> - {item.Quantity}
+        </li>
+      ))}
+    </ul>
+
+    <div className="flex justify-between items-center mt-4">
+      <div className="text-sm text-gray-500 dark:text-gray-400">
+        Status:{" "}
+        <span
+          className={`px-2 py-1 rounded-full ${
+            order.Status === "Pending"
+              ? "bg-yellow-200 text-yellow-800"
+              : order.Status === "Preparing"
+              ? "bg-blue-200 text-blue-800"
+              : order.Status === "Completed"
+              ? "bg-red-200 text-red-800"
+              : "bg-green-200 text-green-800"
+          }`}
+        >
+          {order.Status}
+        </span>
+      </div>
+
+      <Dropdown
+        label="Change Status"
+        color="indigo"
+        arrowIcon={true}
+        inline={true}
+        className="rounded-lg"
+      >
+        <Dropdown.Item
+          onClick={() => handleStatusChange(order.OrderId, "Confirmed")}
+        >
+          Confirmed
+        </Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => handleStatusChange(order.OrderId, "Preparing")}
+        >
+          Preparing
+        </Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => handleStatusChange(order.OrderId, "Delivered")}
+        >
+          Delivered
+        </Dropdown.Item>
+      </Dropdown>
+    </div>
+  </div>
+);
 
 export default Orders;
