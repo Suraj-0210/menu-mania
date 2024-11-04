@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "emailjs-com";
 
 function Contact() {
   // Array of customer support or contact-related images
@@ -8,63 +9,123 @@ function Contact() {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [isSent, setIsSent] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .send(
+        "YOUR_SERVICE_ID", // Replace with your EmailJS Service ID
+        "YOUR_TEMPLATE_ID", // Replace with your EmailJS Template ID
+        {
+          subject: formData.name, // Setting the name as the email subject
+          message: formData.message,
+          to_email: "kantaprustys@gmail.com", // Email recipient
+          from_email: formData.email,
+          from_name: formData.name,
+        },
+        "YOUR_USER_ID" // Replace with your EmailJS User ID
+      )
+      .then(() => {
+        setIsSent(true);
+        setError(null);
+        setFormData({ name: "", email: "", message: "" });
+      })
+      .catch((err) => {
+        setError("Failed to send the email. Please try again.");
+      });
+  };
+
   return (
-    <div className="flex flex-col-reverse  md:flex-row gap-10 p-8 sm:p-12 md:p-16 lg:p-28 px-3 max-w-6xl mx-auto h-[calc(100vh-60px)]">
+    <div className="flex flex-col md:flex-row gap-8 p-4 sm:p-8 md:p-12 lg:p-20 max-w-6xl mx-auto bg-white dark:bg-gray-900">
       {/* Left section (Contact form and details) */}
       <div className="flex-1 flex flex-col justify-center gap-6 animate-fade-in">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 animate-slide-up">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 animate-slide-up">
           Contact <span className="text-teal-500">MenuMania</span>
         </h1>
-        <p className="text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base md:text-lg animate-fade-in-delayed">
           We'd love to hear from you! Whether you have a question about
           features, pricing, or anything else, our team is ready to answer all
           your questions.
         </p>
 
         {/* Contact Form */}
-        <form className="space-y-4 text-gray-600">
+        <form className="space-y-4 text-gray-600 dark:text-gray-300">
           <div>
-            <label className="block text-sm font-medium">Name</label>
+            <label className="block text-sm font-medium dark:text-gray-200">
+              Name
+            </label>
             <input
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-gray-800 dark:text-gray-100"
               placeholder="Your Name"
+              required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Email</label>
+            <label className="block text-sm font-medium dark:text-gray-200">
+              Email
+            </label>
             <input
               type="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-gray-800 dark:text-gray-100"
               placeholder="Your Email"
+              required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Message</label>
+            <label className="block text-sm font-medium dark:text-gray-200">
+              Message
+            </label>
             <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-gray-800 dark:text-gray-100"
               placeholder="Your Message"
               rows="4"
+              required
             ></textarea>
           </div>
           <button
             type="submit"
-            className="bg-teal-500 text-white font-bold py-2 px-6 rounded-md hover:bg-teal-600 transition-transform transform hover:scale-105 duration-200 ease-in-out"
+            className="w-full md:w-auto bg-teal-500 text-white font-bold py-2 px-6 rounded-md hover:bg-teal-600 transition-transform transform hover:scale-105 duration-200 ease-in-out"
           >
             Submit
           </button>
         </form>
       </div>
 
-      {/* Right section (Image slideshow) */}
-      <div className="flex-col flex justify-end left-10 items-center relative">
-        <div className="w-full mx-auto h-auto relative">
+      {/* Right section (Image slideshow and contact info) */}
+      <div className="flex flex-col items-center justify-center md:justify-start md:w-1/2 space-y-4">
+        <div className="w-full h-64 sm:h-80 md:h-full relative">
           {images.map((image, index) => (
             <img
               key={index}
               src={image}
               alt={`Contact Slide ${index}`}
-              className={`w-full h-auto object-cover rounded-lg shadow-lg transition-opacity duration-1000 ease-in-out ${
+              className={`w-full h-full object-cover rounded-lg shadow-lg transition-opacity duration-1000 ease-in-out ${
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}
               style={{
@@ -76,10 +137,10 @@ function Contact() {
           ))}
         </div>
         {/* Contact Info */}
-        <div className="mt-6 text-sm sm:text-base lg:text-lg text-gray-600">
-          <p>📍 Address: 1234 Culinary St., Food City, FC 56789</p>
-          <p>📧 Email: support@menumania.com</p>
-          <p>📞 Phone: +91 98765 43210</p>
+        <div className="mt-4 text-center md:text-left text-gray-600 dark:text-gray-300 text-sm sm:text-base lg:text-lg">
+          <p>📍 Address: LIG 1/7, Chandrasekharpur, Bhubaneswar</p>
+          <p>📧 Email: kantaprustys@gmail.com</p>
+          <p>📞 Phone: +91 98279 23428</p>
         </div>
       </div>
     </div>
