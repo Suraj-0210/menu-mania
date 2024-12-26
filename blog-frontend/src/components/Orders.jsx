@@ -18,7 +18,7 @@ const Orders = ({ restaurantid }) => {
         const data = JSON.parse(event.data);
 
         // Check if data is empty or null
-        if (!data || !Array.isArray(data)) {
+        if (!data) {
           setOrders([]); // Set orders to an empty array
           return; // Exit early
         }
