@@ -8,52 +8,61 @@ const Orders = ({ restaurantid }) => {
   const [error, setError] = useState(null);
   const [selectedOrderStatus, setSelectedOrderStatus] = useState({});
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
-    setLoading(true);
-    setError(null); // Reset error state before fetching
+  async function fetchOrders() {
     try {
-      const res = await fetch(
-        `https://endusermenumania.onrender.com/api/orders/restaurant/${restaurantid}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
+      const eventSource = new EventSource(
+        `https://endusermenumania.onrender.com/api/orders/restaurant/${restaurantid}`
       );
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch orders. Please try again later.");
-      }
+      eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
 
-      const data = await res.json();
+        // Check if data is empty or null
+        if (!data || !Array.isArray(data)) {
+          setOrders([]); // Set orders to an empty array
+          return; // Exit early
+        }
 
-      // Check if data is empty or null
-      if (!data || !Array.isArray(data)) {
-        setOrders([]); // Set orders to an empty array
-        return; // Exit early
-      }
+        // Sort orders with "Delivered" status and specific PaymentId at the bottom
+        const sortedOrders = data.sort((a, b) => {
+          if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
+            return 1;
+          if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
+            return -1;
+          if (a.Status === "Delivered") return 1; // Delivered goes last
+          if (b.Status === "Delivered") return -1; // Delivered goes last
+          return 0; // Keep other statuses in order
+        });
 
-      // Sort orders with "Delivered" status and specific PaymentId at the bottom
-      const sortedOrders = data.sort((a, b) => {
-        if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
-          return 1;
-        if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
-          return -1;
-        if (a.Status === "Delivered") return 1; // Delivered goes last
-        if (b.Status === "Delivered") return -1; // Delivered goes last
-        return 0; // Keep other statuses in order
-      });
+        console.log("Received updated orders:", sortedOrders);
+        setOrders(sortedOrders); // Update the UI with the latest sorted orders
+      };
 
-      setOrders(sortedOrders);
+      eventSource.onerror = (error) => {
+        console.error("Error in SSE connection:", error);
+        eventSource.close(); // Close the connection on error
+        setError("Failed to connect to live updates. Please try again later.");
+      };
+
+      // Optional cleanup to close SSE connection when the component unmounts
+      return () => {
+        eventSource.close();
+      };
     } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      console.error("Error in fetchOrders:", error);
+      setError("An error occurred while fetching orders. Please try again.");
     }
-  };
+  }
+
+  useEffect(() => {
+    const cleanup = fetchOrders();
+
+    return () => {
+      if (typeof cleanup === "function") {
+        cleanup(); // Ensure the SSE connection is closed on component unmount
+      }
+    };
+  }, []);
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
