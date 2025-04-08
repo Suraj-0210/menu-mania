@@ -116,7 +116,7 @@ export const RestaurantSidebar = (props) => {
               ref={qrCodeRef}
             >
               <QRCodeCanvas
-                value={`https://endusermenumania-1.onrender.com/${currentRestaurant._id}?table=${selectedTable}`} // The URL you want to encode
+                value={`https://endusermenumaniaangular.vercel.app/${currentRestaurant._id}?table=${selectedTable}`} // The URL you want to encode
                 size={128} // Adjust size as needed
                 bgColor={"#ffffff"}
                 fgColor={"#000000"}
