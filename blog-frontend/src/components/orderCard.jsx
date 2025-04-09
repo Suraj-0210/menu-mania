@@ -19,6 +19,14 @@ const OrderCard = ({ order, handleStatusChange }) => (
       ))}
     </ul>
 
+    {/* Message Section */}
+    {order.Message && order.Message.trim() !== "" && (
+      <div className="mt-4 p-3 bg-indigo-50 border-l-4 border-indigo-600 text-indigo-900 dark:bg-indigo-900 dark:text-indigo-100 dark:border-indigo-400 rounded-md shadow-sm">
+        <div className="text-sm font-medium">Customer Note:</div>
+        <div className="text-sm italic mt-1">"{order.Message}"</div>
+      </div>
+    )}
+
     <div className="flex flex-col sm:flex-row justify-between items-start mt-4">
       <div className="text-sm text-gray-500 dark:text-gray-400">
         Status:{" "}
