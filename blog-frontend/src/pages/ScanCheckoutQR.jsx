@@ -1,112 +1,66 @@
 import { useState } from "react";
-import QRCode from "react-qr-code";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { Scanner } from "@yudiel/react-qr-scanner";
 
-function ScanCheckoutQR() {
+const ScanCheckoutQR = () => {
   const [sessionId, setSessionId] = useState("");
-  const [checkoutData, setCheckoutData] = useState(null);
-  const { toast } = useToast();
+  const [error, setError] = useState("");
+  const [orderData, setOrderData] = useState(null);
 
-  const handleFetchCheckout = async () => {
-    if (!sessionId.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid Session ID.",
-        variant: "destructive",
-      });
-      return;
-    }
-    try {
-      const res = await fetch(
-        `https://endusermenumania.onrender.com/api/checkout/${sessionId}`
-      );
-      const data = await res.json();
-      if (res.ok) {
-        setCheckoutData(data);
-      } else {
-        toast({
-          title: "Error",
-          description: data.message || "Failed to fetch checkout data",
-          variant: "destructive",
-        });
+  const handleScan = async (codes) => {
+    const result = codes[0]?.rawValue;
+    if (result && result !== sessionId) {
+      setSessionId(result);
+      try {
+        const response = await fetch(
+          `https://endusermenumania.onrender.com/api/checkout/${result}`
+        );
+        const data = await response.json();
+        setOrderData(data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch order data.");
       }
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: "Something went wrong while fetching data.",
-        variant: "destructive",
-      });
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4 py-10">
-      <h1 className="text-4xl md:text-5xl font-extrabold text-teal-400 mb-8 text-center">
-        Scan to Checkout
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center px-4">
+      <h1 className="text-3xl font-bold mb-6 text-teal-400">
+        Scan Checkout QR Code
       </h1>
-      <Card className="bg-zinc-900 border border-zinc-700 shadow-2xl p-6 rounded-2xl max-w-2xl w-full animate-fade-in">
-        <CardContent className="flex flex-col items-center gap-6">
-          <QRCode
-            value={sessionId || "d80f413b-6f47-49b1-a5b3-d76a6fd39c97"}
-            size={180}
-            bgColor="#000000"
-            fgColor="#14b8a6"
-          />
-          <Input
-            placeholder="Enter or Scan Session ID"
-            value={sessionId}
-            onChange={(e) => setSessionId(e.target.value)}
-            className="bg-zinc-800 border-zinc-700 text-white focus:ring-teal-500 focus:border-teal-500"
-          />
-          <Button
-            onClick={handleFetchCheckout}
-            className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-full text-lg transition-all duration-200"
-          >
-            Fetch Checkout Details
-          </Button>
 
-          {checkoutData && (
-            <div className="mt-6 w-full bg-zinc-800 rounded-xl p-4 text-sm text-gray-300 space-y-3 overflow-auto max-h-[400px]">
-              <h2 className="text-teal-400 font-bold text-lg">
-                Table No: {checkoutData.tableNo}
-              </h2>
-              <p>Total Amount: ₹{checkoutData.totalAmount}</p>
-              <p>Paid Online: ₹{checkoutData.paidOnline}</p>
-              <p>Remaining: ₹{checkoutData.remainingAmount}</p>
-              <div className="space-y-4">
-                {checkoutData.orders.map((order, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-zinc-900 p-3 rounded-lg border border-zinc-700"
-                  >
-                    <p className="text-teal-300">Order ID: {order.OrderId}</p>
-                    <p>Status: {order.Status}</p>
-                    <p>
-                      Date: {new Date(order.orderDateTime).toLocaleString()}
-                    </p>
-                    <div className="mt-2 space-y-1">
-                      {order.Items.map((item, i) => (
-                        <div key={i} className="flex justify-between">
-                          <span>
-                            {item.Name} x {item.Quantity}
-                          </span>
-                          <span>₹{item.Total}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+      <div className="w-full max-w-md rounded-xl overflow-hidden shadow-2xl border border-teal-500 bg-gray-800">
+        <Scanner
+          onScan={handleScan}
+          onError={(e) => setError("Camera access error")}
+          formats={["qr_code"]}
+          className="w-full"
+        />
+      </div>
+
+      {sessionId && (
+        <div className="mt-6 p-4 bg-gray-700 border border-teal-400 rounded-lg shadow-md w-full max-w-md text-sm">
+          <p>
+            <strong>Session ID:</strong> {sessionId}
+          </p>
+          {orderData ? (
+            <div className="mt-4">
+              <p className="text-green-400 font-semibold">
+                Order Fetched Successfully
+              </p>
+              <pre className="mt-2 bg-gray-800 p-2 rounded">
+                {JSON.stringify(orderData, null, 2)}
+              </pre>
             </div>
+          ) : (
+            <p className="text-yellow-400">Fetching order details...</p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      )}
+
+      {error && <p className="mt-4 text-red-400">{error}</p>}
     </div>
   );
-}
+};
 
 export default ScanCheckoutQR;
