@@ -23,6 +23,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/restaurants" element={<Restaurants />} />
+          <Route path="/checkoutqr" element={<Restaurants />} />
         </Route>
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
