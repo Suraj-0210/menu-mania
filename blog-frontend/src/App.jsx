@@ -10,6 +10,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Restaurants from "./pages/Restaurants";
 import Blogs from "./pages/Blogs";
 import Contact from "./pages/Contact";
+import ScanCheckoutQR from "./pages/ScanCheckoutQR";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/restaurants" element={<Restaurants />} />
-          <Route path="/checkoutqr" element={<Restaurants />} />
+          <Route path="/checkoutqr" element={<ScanCheckoutQR />} />
         </Route>
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
