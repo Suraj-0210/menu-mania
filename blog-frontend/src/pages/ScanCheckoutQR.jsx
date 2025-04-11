@@ -9,7 +9,6 @@ const ScanCheckoutQR = () => {
   const handleScan = async (codes) => {
     const result = codes[0]?.rawValue;
     if (result && result !== sessionId) {
-      result = "c95b7faf-dbc0-4473-b78c-8b56899e3ec7";
       setSessionId(result);
       try {
         const response = await fetch(
@@ -29,6 +28,7 @@ const ScanCheckoutQR = () => {
     setOrderData(null);
     setError(null);
   };
+  handleScan();
 
   return (
     <div className="min-h-screen bg-gray-950 text-white px-4 py-10 flex flex-col items-center">
@@ -117,7 +117,7 @@ const ScanCheckoutQR = () => {
 
           <div className="mt-6 flex justify-center">
             <button
-              onClick={reset}
+              onClick={resetScanner}
               className="bg-teal-600 hover:bg-teal-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
             >
               🔄 Scan Another QR
