@@ -74,7 +74,7 @@ const ScanCheckoutQR = () => {
         Scan Checkout QR Code
       </h1>
 
-      {!orderData && error && (
+      {!orderData && !error && (
         <div className="w-full max-w-md bg-gray-800 border border-teal-500 rounded-2xl p-4 shadow-2xl">
           <Scanner
             onScan={handleScan}
