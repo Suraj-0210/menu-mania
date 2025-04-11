@@ -86,13 +86,16 @@ const ScanCheckoutQR = () => {
       )}
 
       {!orderData && error && (
-        <div>
-          <div className="mt-6 max-w-md text-center text-red-400 font-medium text-lg">
-            ❌ {error}
-          </div>
+        <div className="mt-10 w-full max-w-md p-6 bg-gray-800 border border-red-500 rounded-2xl shadow-xl text-center">
+          <h2 className="text-2xl font-bold text-red-400 mb-3">⚠️ Oops!</h2>
+          <p className="text-lg text-gray-300 font-medium mb-2">{error}</p>
+          <p className="text-sm text-gray-500">
+            Please ensure the QR code is valid and try again.
+          </p>
+
           <button
             onClick={resetScanner}
-            className="bg-teal-600 hover:bg-teal-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
+            className="mt-6 bg-teal-600 hover:bg-teal-700 px-5 py-2 rounded-xl text-white font-semibold transition duration-200 shadow-md"
           >
             🔄 Scan Another QR
           </button>
@@ -185,7 +188,7 @@ const ScanCheckoutQR = () => {
         </div>
       )}
 
-      {error && <p className="mt-4 text-red-400">{error}</p>}
+      {orderData && error && <p className="mt-4 text-red-400">{error}</p>}
     </div>
   );
 };
