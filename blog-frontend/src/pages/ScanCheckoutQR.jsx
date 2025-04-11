@@ -86,8 +86,16 @@ const ScanCheckoutQR = () => {
       )}
 
       {!orderData && error && (
-        <div className="mt-6 max-w-md text-center text-red-400 font-medium text-lg">
-          ❌ {error}
+        <div>
+          <div className="mt-6 max-w-md text-center text-red-400 font-medium text-lg">
+            ❌ {error}
+          </div>
+          <button
+            onClick={resetScanner}
+            className="bg-teal-600 hover:bg-teal-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
+          >
+            🔄 Scan Another QR
+          </button>
         </div>
       )}
 
