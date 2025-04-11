@@ -9,6 +9,7 @@ const ScanCheckoutQR = () => {
   const handleScan = async (codes) => {
     const result = codes[0]?.rawValue;
     if (result && result !== sessionId) {
+      result = "c95b7faf-dbc0-4473-b78c-8b56899e3ec7";
       setSessionId(result);
       try {
         const response = await fetch(
