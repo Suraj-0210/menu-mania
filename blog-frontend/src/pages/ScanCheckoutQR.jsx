@@ -10,15 +10,26 @@ const ScanCheckoutQR = () => {
     const result = codes[0]?.rawValue;
     if (result && result !== sessionId) {
       setSessionId(result);
+      setError(""); // Clear any previous error
+
       try {
         const response = await fetch(
           `https://endusermenumania.onrender.com/api/checkout/${result}`
         );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setError(errorData.message || "Unknown error occurred");
+          setOrderData(null);
+          return;
+        }
+
         const data = await response.json();
         setOrderData(data);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch order data.");
+        setOrderData(null);
       }
     }
   };
@@ -71,6 +82,12 @@ const ScanCheckoutQR = () => {
             formats={["qr_code"]}
             className="w-full"
           />
+        </div>
+      )}
+
+      {!orderData && error && (
+        <div className="mt-6 max-w-md text-center text-red-400 font-medium text-lg">
+          ❌ {error}
         </div>
       )}
 
