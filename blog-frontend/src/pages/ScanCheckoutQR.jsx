@@ -89,9 +89,6 @@ const ScanCheckoutQR = () => {
         <div className="mt-10 w-full max-w-md p-6 bg-gray-800 border border-red-500 rounded-2xl shadow-xl text-center">
           <h2 className="text-2xl font-bold text-red-400 mb-3">⚠️ Oops!</h2>
           <p className="text-lg text-gray-300 font-medium mb-2">{error}</p>
-          <p className="text-sm text-gray-500">
-            Please ensure the QR code is valid and try again.
-          </p>
 
           <button
             onClick={resetScanner}
