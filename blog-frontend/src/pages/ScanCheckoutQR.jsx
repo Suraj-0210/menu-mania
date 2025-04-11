@@ -33,7 +33,7 @@ const ScanCheckoutQR = () => {
 
     try {
       const response = await fetch(
-        "https://endusermenumania.onrender.com/api/expire-session",
+        "https://endusermenumania.onrender.com/api/session/expire-session",
         {
           method: "POST",
           headers: {
@@ -142,10 +142,10 @@ const ScanCheckoutQR = () => {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-col justify-center">
+          <div className="mt-6 flex flex-col justify-center gap-2">
             <button
               onClick={handleCompleteCheckout}
-              className="ml-4 bg-red-600 hover:bg-red-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
+              className=" bg-red-600 hover:bg-red-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
             >
               ✅ Complete Checkout
             </button>
