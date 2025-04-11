@@ -11,6 +11,7 @@ import Restaurants from "./pages/Restaurants";
 import Blogs from "./pages/Blogs";
 import Contact from "./pages/Contact";
 import ScanCheckoutQR from "./pages/ScanCheckoutQR";
+import TableStatusPage from "./pages/TableStatusPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/restaurants" element={<Restaurants />} />
           <Route path="/checkoutqr" element={<ScanCheckoutQR />} />
+          <Route path="/tabledetails" element={<TableStatusPage />} />
         </Route>
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />

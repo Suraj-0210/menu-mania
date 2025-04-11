@@ -112,6 +112,9 @@ function Header() {
         <Navbar.Link active={path === "/checkoutqr "} as={"div"}>
           <Link to="/checkoutqr">Checkout</Link>
         </Navbar.Link>
+        <Navbar.Link active={path === "/tabledetails "} as={"div"}>
+          <Link to="/tabledetails">TableDetails</Link>
+        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );
