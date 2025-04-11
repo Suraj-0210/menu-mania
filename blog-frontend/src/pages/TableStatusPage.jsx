@@ -1,43 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
-const TableStatusPage = () => {
-  const { currentUser } = useSelector((state) => state.user);
+const TableStatusPage = ({ restaurantId }) => {
   const [tables, setTables] = useState([]);
   const [connected, setConnected] = useState(false);
-  const [restaurantId, setRestaurantId] = useState(null);
-
-  useEffect(() => {
-    const fetchRestaurantId = async () => {
-      if (!currentUser || !currentUser._id) {
-        console.error("User not found in Redux store.");
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `https://endusermenumania.onrender.com/api/restaurant/get-restaurant-id?user_id=${currentUser._id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch restaurant ID");
-        }
-
-        const data = await response.json();
-        setRestaurantId(data.restaurantId);
-      } catch (err) {
-        console.error("❌ Failed to fetch restaurant ID:", err);
-      }
-    };
-
-    fetchRestaurantId();
-  }, [currentUser]);
+  restaurantId = "670f409547d210caa502d5be";
 
   useEffect(() => {
     if (!restaurantId) return;

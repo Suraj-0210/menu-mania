@@ -89,13 +89,20 @@ const ScanCheckoutQR = () => {
         <div className="mt-10 w-full max-w-md p-6 bg-gray-800 border border-red-500 rounded-2xl shadow-xl text-center">
           <h2 className="text-2xl font-bold text-red-400 mb-3">⚠️ Oops!</h2>
           <p className="text-lg text-gray-300 font-medium mb-2">{error}</p>
-
-          <button
-            onClick={resetScanner}
-            className="mt-6 bg-teal-600 hover:bg-teal-700 px-5 py-2 rounded-xl text-white font-semibold transition duration-200 shadow-md"
-          >
-            🔄 Scan Another QR
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={handleCompleteCheckout}
+              className=" bg-red-600 hover:bg-red-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
+            >
+              ✅ Free the Table
+            </button>
+            <button
+              onClick={resetScanner}
+              className="mt-6 bg-teal-600 hover:bg-teal-700 px-5 py-2 rounded-xl text-white font-semibold transition duration-200 shadow-md"
+            >
+              🔄 Scan Another QR
+            </button>
+          </div>
         </div>
       )}
 
