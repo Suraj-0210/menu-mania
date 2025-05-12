@@ -100,20 +100,23 @@ function Header() {
         <Navbar.Link active={path === "/"} as={"div"}>
           <Link to="/">Home</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/about"} as={"div"}>
-          <Link to="/about">About</Link>
-        </Navbar.Link>
         <Navbar.Link active={path === "/restaurants "} as={"div"}>
           <Link to="/restaurants">Restaurant</Link>
-        </Navbar.Link>
-        <Navbar.Link active={path === "/blogs "} as={"div"}>
-          <Link to="/blogs">Blogs</Link>
         </Navbar.Link>
         <Navbar.Link active={path === "/checkoutqr "} as={"div"}>
           <Link to="/checkoutqr">Checkout</Link>
         </Navbar.Link>
         <Navbar.Link active={path === "/tabledetails "} as={"div"}>
           <Link to="/tabledetails">TableDetails</Link>
+        </Navbar.Link>
+        <Navbar.Link active={path === "/metrices "} as={"div"}>
+          <Link to="/metrices">Metrices</Link>
+        </Navbar.Link>
+        <Navbar.Link active={path === "/blogs "} as={"div"}>
+          <Link to="/blogs">Blogs</Link>
+        </Navbar.Link>
+        <Navbar.Link active={path === "/about"} as={"div"}>
+          <Link to="/about">About</Link>
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>

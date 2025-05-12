@@ -30,6 +30,10 @@ export default function Restaurants() {
         throw new Error("Network response was not ok");
       }
       const data = await res.json();
+      // Save only the restaurant _id to localStorage
+      if (data && data.length > 0) {
+        localStorage.setItem("restaurantId", data[0]._id); // Assuming the first restaurant in the list is the one you want
+      }
       setRestaurants(data);
     } catch (error) {
       console.error("Error fetching restaurants:", error);

@@ -12,6 +12,7 @@ import Blogs from "./pages/Blogs";
 import Contact from "./pages/Contact";
 import ScanCheckoutQR from "./pages/ScanCheckoutQR";
 import TableStatusPage from "./pages/TableStatusPage";
+import PieChartDemo from "./pages/PieChartDemo";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/restaurants" element={<Restaurants />} />
           <Route path="/checkoutqr" element={<ScanCheckoutQR />} />
           <Route path="/tabledetails" element={<TableStatusPage />} />
+          <Route path="/metrices" element={<PieChartDemo />} />
         </Route>
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />

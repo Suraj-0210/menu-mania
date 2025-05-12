@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-const TableStatusPage = ({ restaurantId }) => {
+const TableStatusPage = () => {
   const [tables, setTables] = useState([]);
   const [connected, setConnected] = useState(false);
-  restaurantId = "670f409547d210caa502d5be";
+  const [error, setError] = useState(null);
+
+  // Retrieve restaurantId from localStorage
+  const restaurantId = localStorage.getItem("restaurantId");
 
   useEffect(() => {
-    if (!restaurantId) return;
+    if (!restaurantId) {
+      setError(
+        "Restaurant ID is not available. Please log in or set the restaurant."
+      );
+      return;
+    }
 
     const eventSource = new EventSource(
       `https://endusermenumania.onrender.com/api/session/stream-table-status/${restaurantId}`
@@ -53,6 +61,17 @@ const TableStatusPage = ({ restaurantId }) => {
       console.log("🔒 SSE connection closed");
     };
   }, [restaurantId]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 flex justify-center items-center">
+        <div className="bg-red-600 text-center p-6 rounded-lg shadow-lg">
+          <h1 className="text-2xl font-bold text-white">Error</h1>
+          <p className="mt-2 text-lg text-white">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
