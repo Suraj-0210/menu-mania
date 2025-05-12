@@ -36,7 +36,7 @@ const PieChartDemo = () => {
     const fetchOrders = async () => {
       try {
         const res = await fetch(
-          "https://endusermenumania.onrender.com/api/orders/restaurant/metrices/670f409547d210caa502d5be"
+          `https://endusermenumania.onrender.com/api/orders/restaurant/metrices/${restaurantId}`
         );
         const data = await res.json();
         setOrders(data); // Assuming the response is an array of orders
