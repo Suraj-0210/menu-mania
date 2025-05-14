@@ -42,7 +42,7 @@ function Home() {
             to="/restaurants"
             className="text-sm sm:text-base lg:text-lg text-teal-500 dark:text-teal-400 font-bold hover:underline transition-transform transform hover:scale-105 duration-200 ease-in-out animate-bounce-in"
           >
-            View all Restaurants
+            Go To Your Restaurant
           </Link>
         ) : (
           <>
