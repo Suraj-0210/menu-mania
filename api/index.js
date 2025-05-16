@@ -25,10 +25,21 @@ const __dirname = path.resolve();
 const app = express();
 
 // Configure CORS options
+const allowedOrigins = [
+  "https://menumania.vercel.app",
+  "http://localhost:5173",
+];
+
 const corsOptions = {
-  origin: "https://menumania.vercel.app", // Allow only this origin
-  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
-  credentials: true, // Allow credentials (if needed)
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
