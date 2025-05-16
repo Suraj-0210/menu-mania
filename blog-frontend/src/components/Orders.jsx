@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Spinner, Dropdown } from "flowbite-react"; // Import Dropdown from Flowbite
 import OrderCard from "./orderCard";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Orders = ({ restaurantid }) => {
   const [orders, setOrders] = useState([]);
@@ -77,6 +79,11 @@ const Orders = ({ restaurantid }) => {
 
       if (!res.ok) {
         throw new Error("Failed to update order status. Please try again.");
+      } else {
+        toast.success("Updated The Status !", {
+          position: "top-right",
+          autoClose: 2000,
+        });
       }
 
       await res.json();
@@ -141,75 +148,78 @@ const Orders = ({ restaurantid }) => {
   );
 
   return (
-    <div className="max-w-full mx-auto p-4 sm:p-6 lg:p-8">
-      {nonDeliveredOrders.length ? (
-        <div className="space-y-6">
-          {nonDeliveredOrders.map((order) => (
-            <OrderCard
-              key={order.OrderId}
-              order={order}
-              handleStatusChange={handleStatusChange}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-600 dark:text-gray-300 text-center mt-10">
-          No orders yet. Sit back let the customers in.
-        </p>
-      )}
-
-      {/* Horizontal Line */}
-      {deliveredOrders.length > 0 && (
-        <div className="my-4">
-          <hr className="border-gray-300" />
-        </div>
-      )}
-
-      {/* Delivered Orders Sections */}
-
-      {/* Delivered Orders (Pay After Service) Section */}
-      {deliveredOrders.filter(
-        (order) => order.PaymentId === "Pay_After_Service"
-      ).length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Delivered Orders (Pay After Service)
-          </h2>
+    <>
+      <div className="max-w-full mx-auto p-4 sm:p-6 lg:p-8">
+        {nonDeliveredOrders.length ? (
           <div className="space-y-6">
-            {deliveredOrders
-              .filter((order) => order.PaymentId === "Pay_After_Service")
-              .map((order) => (
-                <OrderCard
-                  key={order.OrderId}
-                  order={order}
-                  handleStatusChange={handleStatusChange}
-                />
-              ))}
+            {nonDeliveredOrders.map((order) => (
+              <OrderCard
+                key={order.OrderId}
+                order={order}
+                handleStatusChange={handleStatusChange}
+              />
+            ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <p className="text-gray-600 dark:text-gray-300 text-center mt-10">
+            No orders yet. Sit back let the customers in.
+          </p>
+        )}
 
-      {/* Delivered Orders (Paid Online) Section */}
-      {deliveredOrders.filter((order) => order.PaymentId.startsWith("pay_"))
-        .length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Delivered Orders (Paid Online)
-          </h2>
-          <div className="space-y-6">
-            {deliveredOrders
-              .filter((order) => order.PaymentId.startsWith("pay_"))
-              .map((order) => (
-                <OrderCard
-                  key={order.OrderId}
-                  order={order}
-                  handleStatusChange={handleStatusChange}
-                />
-              ))}
+        {/* Horizontal Line */}
+        {deliveredOrders.length > 0 && (
+          <div className="my-4">
+            <hr className="border-gray-300" />
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Delivered Orders Sections */}
+
+        {/* Delivered Orders (Pay After Service) Section */}
+        {deliveredOrders.filter(
+          (order) => order.PaymentId === "Pay_After_Service"
+        ).length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Delivered Orders (Pay After Service)
+            </h2>
+            <div className="space-y-6">
+              {deliveredOrders
+                .filter((order) => order.PaymentId === "Pay_After_Service")
+                .map((order) => (
+                  <OrderCard
+                    key={order.OrderId}
+                    order={order}
+                    handleStatusChange={handleStatusChange}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* Delivered Orders (Paid Online) Section */}
+        {deliveredOrders.filter((order) => order.PaymentId.startsWith("pay_"))
+          .length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Delivered Orders (Paid Online)
+            </h2>
+            <div className="space-y-6">
+              {deliveredOrders
+                .filter((order) => order.PaymentId.startsWith("pay_"))
+                .map((order) => (
+                  <OrderCard
+                    key={order.OrderId}
+                    order={order}
+                    handleStatusChange={handleStatusChange}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <ToastContainer />
+    </>
   );
 };
 
