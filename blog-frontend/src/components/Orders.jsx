@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Spinner, Dropdown } from "flowbite-react"; // Import Dropdown from Flowbite
+import { Spinner } from "flowbite-react";
 import OrderCard from "./orderCard";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,34 +19,32 @@ const Orders = ({ restaurantid }) => {
       eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
-        // Check if data is empty or null
         if (!data) {
-          setOrders([]); // Set orders to an empty array
-          return; // Exit early
+          setOrders([]);
+          return;
         }
 
-        // Sort orders with "Delivered" status and specific PaymentId at the bottom
         const sortedOrders = data.sort((a, b) => {
+          if (a.Status === "Rejected") return 1;
+          if (b.Status === "Rejected") return -1;
           if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
             return 1;
           if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
             return -1;
-          if (a.Status === "Delivered") return 1; // Delivered goes last
-          if (b.Status === "Delivered") return -1; // Delivered goes last
-          return 0; // Keep other statuses in order
+          if (a.Status === "Delivered") return 1;
+          if (b.Status === "Delivered") return -1;
+          return 0;
         });
 
-        console.log("Received updated orders:", sortedOrders);
-        setOrders(sortedOrders); // Update the UI with the latest sorted orders
+        setOrders(sortedOrders);
       };
 
       eventSource.onerror = (error) => {
         console.error("Error in SSE connection:", error);
-        eventSource.close(); // Close the connection on error
+        eventSource.close();
         setError("Failed to connect to live updates. Please try again later.");
       };
 
-      // Optional cleanup to close SSE connection when the component unmounts
       return () => {
         eventSource.close();
       };
@@ -58,10 +56,9 @@ const Orders = ({ restaurantid }) => {
 
   useEffect(() => {
     const cleanup = fetchOrders();
-
     return () => {
       if (typeof cleanup === "function") {
-        cleanup(); // Ensure the SSE connection is closed on component unmount
+        cleanup();
       }
     };
   }, []);
@@ -77,24 +74,23 @@ const Orders = ({ restaurantid }) => {
         }
       );
 
-      if (!res.ok) {
-        throw new Error("Failed to update order status. Please try again.");
-      } else {
-        toast.success("Updated The Status !", {
-          position: "top-right",
-          autoClose: 2000,
-        });
-      }
+      if (!res.ok) throw new Error("Failed to update order status.");
+
+      toast.success("Updated The Status!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
 
       await res.json();
 
-      // Update the order status in the frontend and re-sort orders
       setOrders((prevOrders) =>
         prevOrders
           .map((order) =>
             order.OrderId === orderId ? { ...order, Status: newStatus } : order
           )
           .sort((a, b) => {
+            if (a.Status === "Rejected") return 1;
+            if (b.Status === "Rejected") return -1;
             if (a.Status === "Delivered" && a.PaymentId.startsWith("pay_"))
               return 1;
             if (b.Status === "Delivered" && b.PaymentId.startsWith("pay_"))
@@ -111,20 +107,19 @@ const Orders = ({ restaurantid }) => {
 
   const handleStatusChange = (orderId, newStatus, reason) => {
     const currentOrder = orders.find((order) => order.OrderId === orderId);
-
     if (currentOrder?.Status === "Delivered") {
-      // Show toast
       toast.error("Delivered orders cannot be changed.", {
         position: "top-right",
         autoClose: 3000,
       });
       return;
     }
+
     setSelectedOrderStatus((prevState) => ({
       ...prevState,
       [orderId]: newStatus,
     }));
-    updateOrderStatus(orderId, newStatus, reason); // Trigger API call
+    updateOrderStatus(orderId, newStatus, reason);
   };
 
   if (loading) {
@@ -139,86 +134,89 @@ const Orders = ({ restaurantid }) => {
     return <div className="text-red-600 text-center">{error}</div>;
   }
 
-  // Separate orders for rendering
   const deliveredOrders = orders.filter(
     (order) => order.Status === "Delivered"
   );
-  const nonDeliveredOrders = orders.filter(
-    (order) => order.Status !== "Delivered"
+  const rejectedOrders = orders.filter((order) => order.Status === "Rejected");
+  const nonDeliveredNonRejectedOrders = orders.filter(
+    (order) => order.Status !== "Delivered" && order.Status !== "Rejected"
   );
 
   return (
-    <>
-      <div className="max-w-full mx-auto p-4 sm:p-6 lg:p-8">
-        {nonDeliveredOrders.length ? (
-          <div className="space-y-6">
-            {nonDeliveredOrders.map((order) => (
-              <OrderCard
-                key={order.OrderId}
-                order={order}
-                handleStatusChange={handleStatusChange}
-              />
-            ))}
-          </div>
+    <div className="max-w-full mx-auto p-4 sm:p-6 lg:p-8">
+      {/* Active Orders */}
+      <Section
+        title="Active Orders"
+        orders={nonDeliveredNonRejectedOrders}
+        handleStatusChange={handleStatusChange}
+        emptyMsg="No active orders yet."
+      />
+
+      {/* Delivered Orders (Pay After Service) */}
+      <Section
+        title="Delivered Orders (Pay After Service)"
+        orders={deliveredOrders.filter(
+          (order) => order.PaymentId === "Pay_After_Service"
+        )}
+        handleStatusChange={handleStatusChange}
+      />
+
+      {/* Delivered Orders (Paid Online) */}
+      <Section
+        title="Delivered Orders (Paid Online)"
+        orders={deliveredOrders.filter((order) =>
+          order.PaymentId.startsWith("pay_")
+        )}
+        handleStatusChange={handleStatusChange}
+      />
+
+      {/* Rejected Orders */}
+      <Section
+        title="Rejected Orders"
+        orders={rejectedOrders}
+        handleStatusChange={handleStatusChange}
+        isRejected
+      />
+    </div>
+  );
+};
+
+const Section = ({
+  title,
+  orders,
+  handleStatusChange,
+  emptyMsg = null,
+  isRejected = false,
+}) => {
+  if (!orders.length && !emptyMsg) return null;
+
+  return (
+    <div className="mt-6">
+      <h2
+        className={`text-lg font-semibold ${
+          isRejected
+            ? "text-red-700 dark:text-red-400"
+            : "text-gray-900 dark:text-gray-100"
+        }`}
+      >
+        {title}
+      </h2>
+      <div className="max-h-96 overflow-y-auto mt-4 space-y-4 pr-2">
+        {orders.length ? (
+          orders.map((order) => (
+            <OrderCard
+              key={order.OrderId}
+              order={order}
+              handleStatusChange={handleStatusChange}
+            />
+          ))
         ) : (
-          <p className="text-gray-600 dark:text-gray-300 text-center mt-10">
-            No orders yet. Sit back let the customers in.
+          <p className="text-gray-600 dark:text-gray-300 text-center">
+            {emptyMsg}
           </p>
         )}
-
-        {/* Horizontal Line */}
-        {deliveredOrders.length > 0 && (
-          <div className="my-4">
-            <hr className="border-gray-300" />
-          </div>
-        )}
-
-        {/* Delivered Orders Sections */}
-
-        {/* Delivered Orders (Pay After Service) Section */}
-        {deliveredOrders.filter(
-          (order) => order.PaymentId === "Pay_After_Service"
-        ).length > 0 && (
-          <div className="mt-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Delivered Orders (Pay After Service)
-            </h2>
-            <div className="space-y-6">
-              {deliveredOrders
-                .filter((order) => order.PaymentId === "Pay_After_Service")
-                .map((order) => (
-                  <OrderCard
-                    key={order.OrderId}
-                    order={order}
-                    handleStatusChange={handleStatusChange}
-                  />
-                ))}
-            </div>
-          </div>
-        )}
-
-        {/* Delivered Orders (Paid Online) Section */}
-        {deliveredOrders.filter((order) => order.PaymentId.startsWith("pay_"))
-          .length > 0 && (
-          <div className="mt-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Delivered Orders (Paid Online)
-            </h2>
-            <div className="space-y-6">
-              {deliveredOrders
-                .filter((order) => order.PaymentId.startsWith("pay_"))
-                .map((order) => (
-                  <OrderCard
-                    key={order.OrderId}
-                    order={order}
-                    handleStatusChange={handleStatusChange}
-                  />
-                ))}
-            </div>
-          </div>
-        )}
       </div>
-    </>
+    </div>
   );
 };
 

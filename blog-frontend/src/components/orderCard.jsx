@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Dropdown } from "flowbite-react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OrderCard = ({ order, handleStatusChange }) => {
   const [showRejectionReason, setShowRejectionReason] = useState(false);
@@ -7,8 +9,7 @@ const OrderCard = ({ order, handleStatusChange }) => {
   const [customReason, setCustomReason] = useState("");
 
   const predefinedReasons = [
-    "Insufficient stock available",
-    "Please choose another dish",
+    "Insufficient stock available, please choose another dish",
     "Kitchen is closed",
   ];
 
@@ -25,7 +26,11 @@ const OrderCard = ({ order, handleStatusChange }) => {
       setSelectedReason("");
       setCustomReason("");
     } else {
-      alert("Please provide a reason for rejection.");
+      // alert("Please provide a reason for rejection.");
+      toast.error("Please provide a reason for rejection.", {
+        position: "top-right",
+        autoClose: 2000,
+      });
     }
   };
 
@@ -107,7 +112,19 @@ const OrderCard = ({ order, handleStatusChange }) => {
 
       {/* Rejection Reason Section */}
       {showRejectionReason && (
-        <div className="mt-4 p-4 bg-red-50 dark:bg-red-900 rounded-md border border-red-300 dark:border-red-700">
+        <div className="mt-4 relative p-4 bg-red-50 dark:bg-red-900 rounded-md border border-red-300 dark:border-red-700">
+          <button
+            onClick={() => {
+              setShowRejectionReason(false);
+              setSelectedReason("");
+              setCustomReason("");
+            }}
+            className="absolute top-2 right-2 text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-white text-xl font-bold focus:outline-none"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+
           <label className="text-sm font-medium text-red-800 dark:text-red-200 block mb-2">
             Select Rejection Reason
           </label>
