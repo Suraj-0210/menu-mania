@@ -103,6 +103,13 @@ const Orders = ({ restaurantid }) => {
   };
 
   const handleStatusChange = (orderId, newStatus) => {
+    const currentOrder = orders.find((order) => order.OrderId === orderId);
+
+    if (currentOrder?.Status === "Delivered") {
+      // Show toast or set error
+      setError("Delivered orders cannot be changed.");
+      return;
+    }
     setSelectedOrderStatus((prevState) => ({
       ...prevState,
       [orderId]: newStatus,
