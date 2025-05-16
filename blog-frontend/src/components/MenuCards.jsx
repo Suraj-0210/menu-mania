@@ -59,7 +59,7 @@ export const MenuCards = (props) => {
           position: "top-right",
           autoClose: 2000,
         });
-        navigate(0); // Refresh the page
+        fetchMenus(); // Refresh the page
       }
     } catch (error) {
       toast.error("Failed to delete the dish or associated orders.", {
@@ -124,7 +124,7 @@ export const MenuCards = (props) => {
         </Card>
       </div>
 
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 };

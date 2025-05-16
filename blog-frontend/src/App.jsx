@@ -13,6 +13,7 @@ import Contact from "./pages/Contact";
 import ScanCheckoutQR from "./pages/ScanCheckoutQR";
 import TableStatusPage from "./pages/TableStatusPage";
 import PieChartDemo from "./pages/PieChartDemo";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
       </Routes>
       <FooterCom />
+      <ToastContainer />
     </BrowserRouter>
   );
 }

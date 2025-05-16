@@ -66,14 +66,14 @@ const Orders = ({ restaurantid }) => {
     };
   }, []);
 
-  const updateOrderStatus = async (orderId, newStatus) => {
+  const updateOrderStatus = async (orderId, newStatus, reason) => {
     try {
       const res = await fetch(
         `https://endusermenumania.onrender.com/api/orders/${orderId}/status`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: newStatus }),
+          body: JSON.stringify({ status: newStatus, rejectReason: reason }),
         }
       );
 
@@ -109,7 +109,7 @@ const Orders = ({ restaurantid }) => {
     }
   };
 
-  const handleStatusChange = (orderId, newStatus) => {
+  const handleStatusChange = (orderId, newStatus, reason) => {
     const currentOrder = orders.find((order) => order.OrderId === orderId);
 
     if (currentOrder?.Status === "Delivered") {
@@ -124,7 +124,7 @@ const Orders = ({ restaurantid }) => {
       ...prevState,
       [orderId]: newStatus,
     }));
-    updateOrderStatus(orderId, newStatus); // Trigger API call
+    updateOrderStatus(orderId, newStatus, reason); // Trigger API call
   };
 
   if (loading) {
@@ -218,7 +218,6 @@ const Orders = ({ restaurantid }) => {
           </div>
         )}
       </div>
-      <ToastContainer />
     </>
   );
 };
