@@ -77,6 +77,15 @@ const ScanCheckoutQR = () => {
       }, 0);
   };
 
+  // Calculate actual total excluding rejected orders
+  const getValidTotalAmount = (orders) => {
+    return orders
+      .filter((order) => order.Status !== "Rejected")
+      .reduce((total, order) => {
+        return total + order.Items.reduce((sum, item) => sum + item.Total, 0);
+      }, 0);
+  };
+
   //handleScan();
 
   return (
@@ -172,16 +181,34 @@ const ScanCheckoutQR = () => {
 
           <div className="mt-8 bg-gray-800 rounded-xl p-5 border border-gray-700 shadow-lg text-lg space-y-2">
             <div className="flex justify-between font-semibold text-gray-300">
-              <span>Total Amount:</span>
-              <span className="text-yellow-300">₹{orderData.totalAmount}</span>
+              <span>Total Amount (Accepted Orders):</span>
+              <span className="text-yellow-300">
+                ₹{getValidTotalAmount(orderData.orders)}
+              </span>
             </div>
             <div className="flex justify-between font-semibold text-gray-300">
               <span>Paid Online:</span>
               <span className="text-green-400">₹{orderData.paidOnline}</span>
             </div>
+
+            {getRefundAmount(orderData.orders) > 0 && (
+              <div className="flex justify-between font-semibold text-gray-300">
+                <span>Refund Amount (Rejected Orders):</span>
+                <span className="text-yellow-300">
+                  ₹{getRefundAmount(orderData.orders)}
+                </span>
+              </div>
+            )}
+
             <div className="flex justify-between font-semibold text-gray-300 border-t border-gray-700 pt-2">
-              <span>To Collect in Cash:</span>
-              <span className="text-red-400">₹{orderData.remainingAmount}</span>
+              <span>To Collect :</span>
+              <span className="text-red-400">
+                ₹
+                {Math.max(
+                  getValidTotalAmount(orderData.orders) - orderData.paidOnline,
+                  0
+                )}
+              </span>
             </div>
           </div>
 
