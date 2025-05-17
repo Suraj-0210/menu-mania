@@ -8,6 +8,7 @@ const ScanCheckoutQR = () => {
 
   const handleScan = async (codes) => {
     const result = codes[0]?.rawValue;
+    //const result = "cd974073-cf89-4c04-9b3d-7cb9caa2e6ec";
     if (result && result !== sessionId) {
       setSessionId(result);
       setError(""); // Clear any previous error
@@ -67,6 +68,16 @@ const ScanCheckoutQR = () => {
       alert("Something went wrong while expiring the session.");
     }
   };
+
+  const getRefundAmount = (orders) => {
+    return orders
+      .filter((order) => order.Status === "Rejected")
+      .reduce((total, order) => {
+        return total + order.Items.reduce((sum, item) => sum + item.Total, 0);
+      }, 0);
+  };
+
+  //handleScan();
 
   return (
     <div className="min-h-screen bg-gray-950 text-white px-4 py-10 flex flex-col items-center">
@@ -173,6 +184,13 @@ const ScanCheckoutQR = () => {
               <span className="text-red-400">₹{orderData.remainingAmount}</span>
             </div>
           </div>
+
+          {getRefundAmount(orderData.orders) > 0 && (
+            <div className="mt-6 bg-yellow-900 rounded-xl p-5 border border-yellow-500 shadow-lg text-lg text-yellow-300 font-medium">
+              ⚠️ Refund ₹{getRefundAmount(orderData.orders)} to the customer for
+              rejected orders.
+            </div>
+          )}
 
           <div className="mt-6 flex flex-col justify-center gap-2">
             <button
