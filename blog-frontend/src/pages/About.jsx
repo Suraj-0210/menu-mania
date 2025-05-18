@@ -29,16 +29,16 @@ function About() {
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 animate-slide-up">
           About <span className="text-teal-500">MenuMania</span>
         </h1>
-        <p className="text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <p className="text-gray-600 dark:text-gray-100 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
           MenuMania is your ultimate solution to streamline your restaurant’s
           menu management and enhance your customers&apos; dining experience.
           With our intuitive interface, you can easily manage your menus, track
           customer preferences, and improve the overall dining experience.
         </p>
-        <p className="text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <p className="text-gray-600 dark:text-gray-100 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
           Our platform offers:
         </p>
-        <ul className="list-disc list-inside text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <ul className="list-disc list-inside text-gray-600 dark:text-gray-100 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
           <li>Easy menu management</li>
           <li>Dynamic updates for specials and promotions</li>
           <li>QR code generation for easy customer access</li>

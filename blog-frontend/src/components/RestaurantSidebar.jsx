@@ -64,7 +64,7 @@ export const RestaurantSidebar = (props) => {
   return (
     <>
       <Sidebar
-        className="w-full md:w-50 bg-white shadow-lg rounded-lg border border-gray-200 p-1"
+        className="w-full md:w-50 shadow-lg rounded-lg border dark:border-gray-600 border-gray-200 p-1"
         aria-label="Restaurant Sidebar"
         style={{
           zIndex: 10, // Higher z-index to make it prominent

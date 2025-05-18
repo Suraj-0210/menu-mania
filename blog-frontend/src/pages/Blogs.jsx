@@ -16,17 +16,17 @@ function Blogs() {
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 animate-slide-up">
           Blogs <span className="text-teal-500">Under Development</span>
         </h1>
-        <p className="text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <p className="text-gray-600 dark:text-gray-100 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
           We are currently working on our blog section to provide you with
           valuable insights, updates, and articles related to the restaurant
           industry, food trends, and best practices for managing your restaurant
           business.
         </p>
-        <p className="text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <p className="text-gray-600 dark:text-gray-100 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
           Stay tuned for exciting blog posts that will help you grow your
           business and enhance customer engagement!
         </p>
-        <p className="text-gray-600 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
+        <p className="text-gray-600 dark:text-gray-100 text-sm sm:text-base lg:text-lg animate-fade-in-delayed">
           In the meantime, feel free to explore our other features or connect
           with us to learn more about our platform.
         </p>

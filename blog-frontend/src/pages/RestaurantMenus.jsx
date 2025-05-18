@@ -175,7 +175,7 @@ export const RestaurantMenus = (props) => {
           onClick={toggleView}
           className="px-4 py-2 bg-indigo-500 text-white rounded-lg mb-4 shadow-md dark:bg-indigo-700"
         >
-          {showOrders ? "View Menu" : "View Orders"}
+          {showOrders ? "View Orders" : "View Menu"}
         </button>
 
         {loading ? (
@@ -193,13 +193,13 @@ export const RestaurantMenus = (props) => {
             errorMessage={errorMessage}
           />
         ) : showOrders ? (
-          <Orders restaurantid={restaurant._id} /> // Show Orders component when toggled
-        ) : !isAddNew && menu.length ? (
           <MenuCards
             isAddNew={isAddNew}
             handleClickAddNew={handleClickAddNew}
             restaurant={restaurant}
           />
+        ) : !isAddNew && menu.length ? (
+          <Orders restaurantid={restaurant._id} /> // Show Orders component when toggled
         ) : (
           <AddDish
             menu={menu}

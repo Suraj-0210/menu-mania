@@ -23,14 +23,11 @@ Chart.register(
 
 const PieChartDemo = () => {
   const [orders, setOrders] = useState([]);
-  // Retrieve restaurantId from localStorage
   const restaurantId = localStorage.getItem("restaurantId");
 
   useEffect(() => {
     if (!restaurantId) {
-      setError(
-        "Restaurant ID is not available. Please log in or set the restaurant."
-      );
+      console.error("Restaurant ID not found.");
       return;
     }
     const fetchOrders = async () => {
@@ -39,7 +36,7 @@ const PieChartDemo = () => {
           `https://endusermenumania.onrender.com/api/orders/restaurant/metrices/${restaurantId}`
         );
         const data = await res.json();
-        setOrders(data); // Assuming the response is an array of orders
+        setOrders(data);
       } catch (err) {
         console.error("Error fetching orders:", err);
       }
@@ -66,20 +63,12 @@ const PieChartDemo = () => {
     const dateObj = new Date(order.OrderDate);
     const day = days[dateObj.getDay()];
 
-    // Track weekday totals
     if (!weekdayMap[day]) weekdayMap[day] = 0;
-
-    // Track items by day
     if (!mostOrderedPerDay[day]) mostOrderedPerDay[day] = {};
 
     order.Items.forEach((item) => {
-      // Total quantity per item
       itemMap[item.Name] = (itemMap[item.Name] || 0) + item.Quantity;
-
-      // Total quantity per day
       weekdayMap[day] += item.Quantity;
-
-      // Most ordered item per day
       mostOrderedPerDay[day][item.Name] =
         (mostOrderedPerDay[day][item.Name] || 0) + item.Quantity;
     });
@@ -106,6 +95,57 @@ const PieChartDemo = () => {
       { length: num },
       () => `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`
     );
+
+  const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: "#111", // Default (light mode)
+        },
+      },
+      title: {
+        color: "#111", // Default (light mode)
+        font: { size: 16 },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "#111",
+        },
+        grid: {
+          color: "#e5e7eb",
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          color: "#111",
+        },
+        grid: {
+          color: "#e5e7eb",
+        },
+      },
+    },
+  };
+
+  const barOptions = { ...commonOptions };
+
+  const darkify = (options) => {
+    const updated = JSON.parse(JSON.stringify(options));
+    updated.plugins.legend.labels.color = "#f9fafb";
+    updated.plugins.title.color = "#f9fafb";
+    updated.scales.x.ticks.color = "#f9fafb";
+    updated.scales.x.grid.color = "#374151";
+    updated.scales.y.ticks.color = "#f9fafb";
+    updated.scales.y.grid.color = "#374151";
+    return updated;
+  };
+
+  const isDark = document.documentElement.classList.contains("dark");
 
   const pieData = {
     labels: itemNames,
@@ -155,33 +195,22 @@ const PieChartDemo = () => {
   };
 
   const pieOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
+    ...commonOptions,
     plugins: {
-      legend: { position: "right" },
-    },
-  };
-
-  const barOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: "Item Popularity",
-        font: { size: 16 },
+      ...commonOptions.plugins,
+      legend: {
+        position: "right",
+        labels: {
+          color: isDark ? "#f9fafb" : "#111",
+        },
       },
-    },
-    scales: {
-      y: { beginAtZero: true, ticks: { stepSize: 1 } },
     },
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 flex flex-wrap gap-6 justify-center">
-      <div className="bg-white shadow-lg rounded-xl p-4 w-full max-w-md h-96">
-        <h2 className="text-lg font-semibold text-center mb-2">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 flex flex-wrap gap-6 justify-center">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 w-full max-w-md h-96">
+        <h2 className="text-lg font-semibold text-center text-gray-900 dark:text-white mb-2">
           Ordered Items (Pie)
         </h2>
         <div className="h-80">
@@ -189,21 +218,27 @@ const PieChartDemo = () => {
         </div>
       </div>
 
-      <div className="bg-white shadow-lg rounded-xl p-4 w-full max-w-md h-96">
-        <h2 className="text-lg font-semibold text-center mb-2">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 w-full max-w-md h-96">
+        <h2 className="text-lg font-semibold text-center text-gray-900 dark:text-white mb-2">
           Item Quantities (Bar)
         </h2>
         <div className="h-80">
-          <Bar data={barData} options={barOptions} />
+          <Bar
+            data={barData}
+            options={isDark ? darkify(barOptions) : barOptions}
+          />
         </div>
       </div>
 
-      <div className="bg-white shadow-lg rounded-xl p-4 w-full max-w-md h-96">
-        <h2 className="text-lg font-semibold text-center mb-2">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 w-full max-w-md h-96">
+        <h2 className="text-lg font-semibold text-center text-gray-900 dark:text-white mb-2">
           Most Ordered Item Per Day
         </h2>
         <div className="h-80">
-          <Bar data={topItemsPerDayData} options={barOptions} />
+          <Bar
+            data={topItemsPerDayData}
+            options={isDark ? darkify(barOptions) : barOptions}
+          />
         </div>
       </div>
     </div>

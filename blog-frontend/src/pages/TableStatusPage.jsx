@@ -5,7 +5,6 @@ const TableStatusPage = () => {
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState(null);
 
-  // Retrieve restaurantId from localStorage
   const restaurantId = localStorage.getItem("restaurantId");
 
   useEffect(() => {
@@ -64,7 +63,7 @@ const TableStatusPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 flex justify-center items-center">
+      <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white p-6 flex justify-center items-center">
         <div className="bg-red-600 text-center p-6 rounded-lg shadow-lg">
           <h1 className="text-2xl font-bold text-white">Error</h1>
           <p className="mt-2 text-lg text-white">{error}</p>
@@ -74,7 +73,7 @@ const TableStatusPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+    <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white p-6">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-4xl font-extrabold tracking-wide">
@@ -82,7 +81,7 @@ const TableStatusPage = () => {
           </h1>
           <div
             className={`px-4 py-2 text-sm rounded-full font-medium shadow ${
-              connected ? "bg-green-600" : "bg-red-500"
+              connected ? "bg-green-600 text-white" : "bg-red-500 text-white"
             }`}
           >
             {connected ? "Live Connected" : "Disconnected"}
@@ -93,23 +92,27 @@ const TableStatusPage = () => {
           {tables.map((table) => (
             <div
               key={table.tableNo}
-              className={`rounded-xl p-4 shadow-xl border-2 backdrop-blur-sm ${
-                table.isBooked
-                  ? "bg-red-600/80 border-red-400"
-                  : "bg-green-700/70 border-green-400"
-              }`}
+              className={`rounded-xl p-4 shadow-xl border-2 backdrop-blur-sm
+                ${
+                  table.isBooked
+                    ? "bg-red-600/80 border-red-400 text-white dark:bg-red-700/90 dark:border-red-500"
+                    : "bg-green-700/70 border-green-400 text-white dark:bg-green-800/90 dark:border-green-500"
+                }
+              `}
             >
               <h2 className="text-xl font-bold">Table #{table.tableNo}</h2>
               <p className="mt-1 text-sm">
                 {table.isBooked ? (
                   <>
                     <span className="block font-semibold">Booked</span>
-                    <span className="text-xs text-gray-100">
+                    <span className="text-xs text-gray-100 dark:text-gray-300">
                       At: {new Date(table.bookedAt).toLocaleTimeString()}
                     </span>
                   </>
                 ) : (
-                  <span className="text-green-100 font-medium">Available</span>
+                  <span className="font-medium text-green-100 dark:text-green-300">
+                    Available
+                  </span>
                 )}
               </p>
             </div>

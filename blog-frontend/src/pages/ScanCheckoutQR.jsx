@@ -8,10 +8,9 @@ const ScanCheckoutQR = () => {
 
   const handleScan = async (codes) => {
     const result = codes[0]?.rawValue;
-    //const result = "cd974073-cf89-4c04-9b3d-7cb9caa2e6ec";
     if (result && result !== sessionId) {
       setSessionId(result);
-      setError(""); // Clear any previous error
+      setError("");
 
       try {
         const response = await fetch(
@@ -36,10 +35,11 @@ const ScanCheckoutQR = () => {
   };
 
   const resetScanner = () => {
-    setSessionId(null);
+    setSessionId("");
     setOrderData(null);
-    setError(null);
+    setError("");
   };
+
   const handleCompleteCheckout = async () => {
     if (!sessionId) return;
 
@@ -59,7 +59,7 @@ const ScanCheckoutQR = () => {
 
       if (response.ok) {
         alert("Checkout completed and session expired! ✅");
-        resetScanner(); // Clear scanner and UI
+        resetScanner();
       } else {
         alert(data.message || "Failed to expire session.");
       }
@@ -69,33 +69,15 @@ const ScanCheckoutQR = () => {
     }
   };
 
-  const getRefundAmount = (orders) => {
-    return orders
-      .filter((order) => order.Status === "Rejected")
-      .reduce((total, order) => {
-        return total + order.Items.reduce((sum, item) => sum + item.Total, 0);
-      }, 0);
-  };
-
-  // Calculate actual total excluding rejected orders
-  const getValidTotalAmount = (orders) => {
-    return orders
-      .filter((order) => order.Status !== "Rejected")
-      .reduce((total, order) => {
-        return total + order.Items.reduce((sum, item) => sum + item.Total, 0);
-      }, 0);
-  };
-
-  //handleScan();
-
   return (
-    <div className="min-h-screen bg-gray-950 text-white px-4 py-10 flex flex-col items-center">
-      <h1 className="text-4xl font-extrabold text-teal-400 mb-8 drop-shadow-lg">
+    <div className="min-h-screen px-4 py-10 flex flex-col items-center bg-white text-gray-900 dark:bg-gray-950 dark:text-white transition-colors duration-300">
+      <h1 className="text-4xl font-extrabold text-teal-600 dark:text-teal-400 mb-8 drop-shadow-md">
         Scan Checkout QR Code
       </h1>
 
+      {/* SCANNER */}
       {!orderData && !error && (
-        <div className="w-full max-w-md bg-gray-800 border border-teal-500 rounded-2xl p-4 shadow-2xl">
+        <div className="w-full max-w-md bg-gray-100 dark:bg-gray-800 border border-teal-500 rounded-2xl p-4 shadow-lg">
           <Scanner
             onScan={handleScan}
             onError={() => setError("Camera access error")}
@@ -105,20 +87,23 @@ const ScanCheckoutQR = () => {
         </div>
       )}
 
+      {/* ERROR STATE */}
       {!orderData && error && (
-        <div className="mt-10 w-full max-w-md p-6 bg-gray-800 border border-red-500 rounded-2xl shadow-xl text-center">
-          <h2 className="text-2xl font-bold text-red-400 mb-3">⚠️ Oops!</h2>
-          <p className="text-lg text-gray-300 font-medium mb-2">{error}</p>
+        <div className="mt-10 w-full max-w-md p-6 bg-red-50 dark:bg-gray-800 border border-red-500 rounded-2xl shadow-lg text-center">
+          <h2 className="text-2xl font-bold text-red-500 mb-3">⚠️ Oops!</h2>
+          <p className="text-lg text-gray-800 dark:text-gray-300 font-medium mb-2">
+            {error}
+          </p>
           <div className="flex flex-col gap-2">
             <button
               onClick={handleCompleteCheckout}
-              className=" bg-red-600 hover:bg-red-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
+              className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-xl font-semibold text-white shadow transition duration-200"
             >
               ✅ Free the Table
             </button>
             <button
               onClick={resetScanner}
-              className="mt-6 bg-teal-600 hover:bg-teal-700 px-5 py-2 rounded-xl text-white font-semibold transition duration-200 shadow-md"
+              className="mt-4 bg-teal-600 hover:bg-teal-700 px-5 py-2 rounded-xl font-semibold text-white shadow transition duration-200"
             >
               🔄 Scan Another QR
             </button>
@@ -126,16 +111,17 @@ const ScanCheckoutQR = () => {
         </div>
       )}
 
+      {/* ORDER DETAILS */}
       {orderData && (
-        <div className="w-full max-w-5xl bg-gray-900 rounded-2xl border border-teal-500 shadow-2xl p-6">
+        <div className="w-full max-w-5xl bg-gray-100 dark:bg-gray-900 rounded-2xl border border-teal-500 shadow-xl p-6 transition-all duration-300">
           <div className="mb-6">
-            <p className="text-teal-300 text-lg font-medium">
+            <p className="text-teal-700 dark:text-teal-300 text-lg font-medium">
               📢 {orderData.message}
             </p>
             <h2 className="text-2xl font-bold mt-2">
               🪑 Table No. {orderData.tableNo}
             </h2>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               Session ID: {orderData.sessionId}
             </p>
           </div>
@@ -144,13 +130,11 @@ const ScanCheckoutQR = () => {
             {orderData.orders.map((order, idx) => (
               <div
                 key={order.OrderId}
-                className="bg-gray-800 rounded-xl p-4 border border-gray-700 shadow-inner"
+                className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-300 dark:border-gray-700 shadow"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xl font-semibold text-white">
-                    🧾 Order #{idx + 1}
-                  </h3>
-                  <span className="text-sm text-gray-400">
+                  <h3 className="text-xl font-semibold">🧾 Order #{idx + 1}</h3>
+                  <span className="text-sm text-gray-500">
                     {new Date(order.orderDateTime).toLocaleString()}
                   </span>
                 </div>
@@ -158,7 +142,7 @@ const ScanCheckoutQR = () => {
                   {order.Items.map((item, i) => (
                     <li
                       key={i}
-                      className="flex justify-between border-b border-gray-700 py-1"
+                      className="flex justify-between border-b border-gray-200 dark:border-gray-700 py-1"
                     >
                       <span>
                         {item.Name} x {item.Quantity}
@@ -167,77 +151,96 @@ const ScanCheckoutQR = () => {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 text-sm flex justify-between text-gray-300">
+                <div className="mt-3 text-sm flex justify-between">
                   <span>Payment Method:</span>
-                  <span className="text-yellow-400">{order.PaymentId}</span>
+                  <span
+                    className={
+                      order.PaymentId === "Pay_After_Service"
+                        ? "text-red-500 font-semibold"
+                        : "text-green-500 font-semibold"
+                    }
+                  >
+                    {order.PaymentId === "Pay_After_Service"
+                      ? "Offline"
+                      : "Online"}
+                  </span>
                 </div>
-                <div className="text-sm flex justify-between text-gray-300">
+                <div className="mt-2 text-sm flex justify-between text-gray-700 dark:text-gray-300">
+                  <span>Payment ID:</span>
+                  <span className="text-yellow-500">{order.PaymentId}</span>
+                </div>
+                <div className="text-sm flex justify-between">
                   <span>Status:</span>
-                  <span className="text-green-400">{order.Status}</span>
+                  <span
+                    className={
+                      order.Status === "Rejected"
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }
+                  >
+                    {order.Status}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 bg-gray-800 rounded-xl p-5 border border-gray-700 shadow-lg text-lg space-y-2">
-            <div className="flex justify-between font-semibold text-gray-300">
-              <span>Total Amount (Accepted Orders):</span>
-              <span className="text-yellow-300">
-                ₹{getValidTotalAmount(orderData.orders)}
-              </span>
-            </div>
-            <div className="flex justify-between font-semibold text-gray-300">
-              <span>Paid Online:</span>
-              <span className="text-green-400">₹{orderData.paidOnline}</span>
-            </div>
-
-            {getRefundAmount(orderData.orders) > 0 && (
-              <div className="flex justify-between font-semibold text-gray-300">
-                <span>Refund Amount (Rejected Orders):</span>
-                <span className="text-yellow-300">
-                  ₹{getRefundAmount(orderData.orders)}
+          {/* BILLING SUMMARY */}
+          <div className="mt-8 bg-gray-100 dark:bg-gray-800 rounded-xl p-6 border border-teal-600 shadow space-y-3 text-base sm:text-lg">
+            <div className="flex justify-between font-semibold">
+              <span>🧮 Total Billed (Accepted Orders):</span>
+              <div className="text-right">
+                <span className="text-yellow-500">
+                  ₹{orderData.totalAmount - orderData.refundAmount}
                 </span>
+                {orderData.refundAmount > 0 && (
+                  <small className="block text-xs text-gray-500 dark:text-gray-400">
+                    (₹{orderData.totalAmount} - ₹{orderData.refundAmount}{" "}
+                    refund)
+                  </small>
+                )}
               </div>
-            )}
-
-            <div className="flex justify-between font-semibold text-gray-300 border-t border-gray-700 pt-2">
-              <span>To Collect :</span>
-              <span className="text-red-400">
+            </div>
+            <div className="flex justify-between font-semibold">
+              <span>💳 Paid Online (Accepted Orders):</span>
+              <span className="text-green-500">₹{orderData.paidOnline}</span>
+            </div>
+            <div className="flex justify-between font-semibold">
+              <span>💵 Remaining (To Collect in Cash):</span>
+              <span className="text-red-500">
                 ₹
                 {Math.max(
-                  getValidTotalAmount(orderData.orders) - orderData.paidOnline,
+                  orderData.remainingAmount - orderData.refundAmount,
                   0
                 )}
               </span>
             </div>
+
+            {orderData.totalAmount - orderData.refundAmount < 0 && (
+              <div className="flex justify-between font-semibold text-yellow-500 bg-yellow-100 dark:bg-yellow-800 p-2 rounded">
+                <span>🔁 Refund Due:</span>
+                <span>₹{orderData.refundAmount - orderData.totalAmount}</span>
+              </div>
+            )}
           </div>
 
-          {getRefundAmount(orderData.orders) > 0 && (
-            <div className="mt-6 bg-yellow-900 rounded-xl p-5 border border-yellow-500 shadow-lg text-lg text-yellow-300 font-medium">
-              ⚠️ Refund ₹{getRefundAmount(orderData.orders)} to the customer for
-              rejected orders.
-            </div>
-          )}
-
-          <div className="mt-6 flex flex-col justify-center gap-2">
+          {/* ACTION BUTTONS */}
+          <div className="mt-6 flex gap-4 justify-center">
             <button
               onClick={handleCompleteCheckout}
-              className=" bg-red-600 hover:bg-red-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
+              className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-xl font-semibold text-white shadow transition"
             >
               ✅ Complete Checkout
             </button>
-
             <button
               onClick={resetScanner}
-              className="bg-teal-600 hover:bg-teal-700 px-6 py-2 rounded-xl font-semibold shadow-md transition duration-200"
+              className="bg-teal-600 hover:bg-teal-700 px-6 py-2 rounded-xl font-semibold text-white shadow transition"
             >
               🔄 Scan Another QR
             </button>
           </div>
         </div>
       )}
-
-      {orderData && error && <p className="mt-4 text-red-400">{error}</p>}
     </div>
   );
 };
