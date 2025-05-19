@@ -30,7 +30,7 @@ export const RestaurantMenus = (props) => {
   const [createRestaurantSuccess, setCreateRestaurantSuccess] = useState("");
   const [updateRestaurantSuccess, setUpdateRestaurantSuccess] = useState("");
   const [isAddNew, setIsAddNew] = useState(false);
-  const [showOrders, setShowOrders] = useState(false); // New state for toggling between menu and orders
+  const [showOrders, setShowOrders] = useState(true); // New state for toggling between menu and orders
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -185,21 +185,21 @@ export const RestaurantMenus = (props) => {
         ) : isUpdateRestaurant ? (
           <UpdateRestaurant
             currentUser={currentUser}
-            restaurantId={restaurant._id} // Pass restaurantId as a prop
-            setUpdateRestaurantSuccess={setUpdateRestaurantSuccess} // Set success message
+            restaurantId={restaurant._id}
+            setUpdateRestaurantSuccess={setUpdateRestaurantSuccess}
             setErrorMessage={setErrorMessage}
             navigate={navigate}
             updateRestaurantSuccess={updateRestaurantSuccess}
             errorMessage={errorMessage}
           />
         ) : showOrders ? (
+          <Orders restaurantid={restaurant._id} />
+        ) : !isAddNew && menu.length ? (
           <MenuCards
             isAddNew={isAddNew}
             handleClickAddNew={handleClickAddNew}
             restaurant={restaurant}
           />
-        ) : !isAddNew && menu.length ? (
-          <Orders restaurantid={restaurant._id} /> // Show Orders component when toggled
         ) : (
           <AddDish
             menu={menu}
